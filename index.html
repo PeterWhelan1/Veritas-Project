@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Veritas AI Values Survey</title>
+  <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+  <script defer src="script.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+    .plot-container { width: 90%; max-width: 900px; margin: 20px auto; }
+    button { margin-top: 16px; padding: 10px 20px; border-radius: 8px; border: 0; cursor: pointer; }
+    #status { margin-top: 10px; min-height: 24px; }
+  </style>
+</head>
+<body>
+  <h1>Veritas AI Values Survey</h1>
+  <p>Click inside each triangle to show how you think these values balance.</p>
+
+  <h3>Current Values (2025)</h3>
+  <div id="plot2025" class="plot-container"></div>
+
+  <h3>Future Values (2075)</h3>
+  <div id="plot2075" class="plot-container"></div>
+
+  <button id="submitBtn">Submit Response</button>
+  <p id="status"></p>
+
+  <small>One submission per device. Faces and identities are not collected.</small>
+</body>
+</html>
+// ---------- CONFIG: set your 3 values here ----------
+const VALUE_A = "Accountability";
+const VALUE_B = "Privacy";
+const VALUE_C = "Public Trust";
+
+// ---------- PLOT HELPERS ----------
+function makePlot(divId) {
+  const data = [{
+    type: 'scatterternary',
+    mode: 'markers',
+    a: [],
+    b: [],
+    c: [],
+    marker: { symbol: 100, size: 8 }
+  }];
+
+  const layout = {
+    ternary: {
+      sum: 1,
+      aaxis: { title: VALUE_A, min: 0, ticks: 'outside' },
+      baxis: { title: VALUE_B, min: 0, ticks: 'outside' },
+      caxis: { title: VALUE_C, min: 0, ticks: 'outside' }
+    },
+    height: 420,
+    margin: { l: 40, r: 40, t: 40, b: 40 }
+  };
+
+  Plotly.newPlot(divId, data, layout);
+
+  // Record clicks
+  let point = null;
+  document.getElementById(divId).on('plotly_click', (ev) => {
+    const a = ev.points[0].a;
+    const b = ev.points[0].b;
+    const c = 1 - (a + b);
+    point = { a, b, c };
+    Plotly.update(divId, { a: [a], b: [b], c: [c] }, {}, [0]);
+  });
+
+  return () => point; // getter for the chosen point
+}
+
+const get2025 = makePlot('plot2025');
+const get2075 = makePlot('plot2075');
+
+// Prevent duplicate submissions on same device (client-side only)
+function alreadySubmitted() {
+  return localStorage.getItem('veritas_values_submitted') === '1';
+}
+function markSubmitted() {
+  localStorage.setItem('veritas_values_submitted', '1');
+}
+
+// Replace this after you deploy the Google Apps Script (next section)
+const GOOGLE_SCRIPT_WEB_APP_URL = "PASTE_YOUR_WEB_APP_URL_HERE";
+
+async function submitToSheet(payload) {
+  // If your org blocks CORS, you can remove headers or use mode:'no-cors'
+  const res = await fetch(GOOGLE_SCRIPT_WEB_APP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  // Apps Script returns 200 with text "OK" if successful
+  return res.ok;
+}
+
+document.getElementById('submitBtn').addEventListener('click', async () => {
+  const status = document.getElementById('status');
+
+  if (alreadySubmitted()) {
+    status.textContent = "You have already submitted from this device. Thanks!";
+    return;
+  }
+
+  const p2025 = get2025();
+  const p2075 = get2075();
+
+  if (!p2025 || !p2075) {
+    status.textContent = "Please click once inside both triangles before submitting.";
+    return;
+  }
+
+  status.textContent = "Submitting...";
+  const payload = {
+    a2025: p2025.a, b2025: p2025.b, c2025: p2025.c,
+    a2075: p2075.a, b2075: p2075.b, c2075: p2075.c,
+    ts: new Date().toISOString()
+  };
+
+  try {
+    const ok = await submitToSheet(payload);
+    if (ok) {
+      status.textContent = "Thank you! Response recorded.";
+      markSubmitted();
+    } else {
+      status.textContent = "Submission failed (network or permissions). Try again.";
+    }
+  } catch (e) {
+    status.textContent = "Submission error. Check your Apps Script URL and permissions.";
+  }
+});
