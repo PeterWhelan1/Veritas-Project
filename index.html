@@ -56,3 +56,210 @@ button:disabled { opacity:0.6; cursor:not-allowed; }
 .small { font-size:12px; color:#374151; }
 .footer { color:#6b7280; font-size:12px; margin-top:16px; }
 .notice { background:#fef3c7; border:1px solid #fde68a; padding:12px; border-radius:8px; }
+window.SURVEY_CONFIG = {
+  GOOGLE_FORM_ACTION: "https://docs.google.com/forms/u/0/d/1Jk_1K-zaze9YfNu2prdoYpGimMg_VlFaIq8ZuYlaXSk/previewResponse", // replace
+  ENTRY_IDS: {
+    present_clp: "entry.622740398, // replace all six
+    present_pse: "entry.2111886901",
+    present_at:  "entry.1542418961",
+    future_clp:  "entry.1124121950",
+    future_pse:  "entry.2061677883",
+    future_at:   "entry.1317594705"
+  },
+  RESPONSES_CSV_URL: "" // optional: published CSV link for the dashboard
+};
+(function(){
+  const CFG = window.SURVEY_CONFIG || {};
+  const PLOT_STYLE = { aaxis:{title:'CLP'}, baxis:{title:'PSE'}, caxis:{title:'AT'} };
+
+  const state = { present:null, future:null };
+  const KEY_PRESENT = 'veritas_present_submitted';
+  const KEY_FUTURE  = 'veritas_future_submitted';
+
+  function ready(){
+    buildPlot('ternary-present','present');
+    buildPlot('ternary-future','future');
+    document.getElementById('submitBtn').addEventListener('click', onSubmit);
+    showSubmittedFlags();
+    updateSubmitEnabled();
+  }
+
+  function buildPlot(elId, which){
+    const data = [{ type:'scatterternary', mode:'markers', a:[], b:[], c:[], marker:{size:12}, name:which }];
+    const layout = { ternary:PLOT_STYLE, margin:{l:10,r:10,b:10,t:10} };
+    Plotly.newPlot(elId, data, layout, {displaylogo:false});
+    const gd = document.getElementById(elId);
+
+    gd.on('plotly_click', (ev) => {
+      if (localStorage.getItem(which==='present'?KEY_PRESENT:KEY_FUTURE)) return;
+      const pt = ev.points[0];
+      const a = clamp(pt.a), b = clamp(pt.b), c = clamp(pt.c);
+      const s = a+b+c; if (!s) return;
+      const k = 100/s;
+      const A=r1(a*k), B=r1(b*k), C=r1(c*k);
+      state[which] = {a:A, b:B, c:C};
+      Plotly.restyle(gd, { a:[[A]], b:[[B]], c:[[C]] }, [0]);
+      document.getElementById(which==='present'?'present-readout':'future-readout')
+        .textContent = `CLP: ${A} · PSE: ${B} · AT: ${C} (sum 100)`;
+      updateSubmitEnabled();
+    });
+  }
+
+  function updateSubmitEnabled(){
+    const btn = document.getElementById('submitBtn');
+    const done = !!state.present && !!state.future;
+    const blocked = localStorage.getItem(KEY_PRESENT) && localStorage.getItem(KEY_FUTURE);
+    btn.disabled = !done || blocked;
+  }
+
+  function showSubmittedFlags(){
+    if (localStorage.getItem(KEY_PRESENT))
+      document.getElementById('present-readout').textContent += ' · (submitted on this device)';
+    if (localStorage.getItem(KEY_FUTURE))
+      document.getElementById('future-readout').textContent  += ' · (submitted on this device)';
+  }
+
+  async function onSubmit(){
+    const btn = document.getElementById('submitBtn');
+    const msg = document.getElementById('submitMsg');
+    if (!CFG.GOOGLE_FORM_ACTION) { msg.textContent='Form not configured.'; return; }
+    if (!state.present || !state.future) { msg.textContent='Select both points.'; return; }
+
+    btn.disabled = true; msg.textContent = 'Submitting…';
+
+    const fd = new FormData();
+    fd.append(CFG.ENTRY_IDS.present_clp, state.present.a);
+    fd.append(CFG.ENTRY_IDS.present_pse, state.present.b);
+    fd.append(CFG.ENTRY_IDS.present_at,  state.present.c);
+    fd.append(CFG.ENTRY_IDS.future_clp,  state.future.a);
+    fd.append(CFG.ENTRY_IDS.future_pse,  state.future.b);
+    fd.append(CFG.ENTRY_IDS.future_at,   state.future.c);
+
+    try {
+      await fetch(CFG.GOOGLE_FORM_ACTION, { method:'POST', mode:'no-cors', body:fd });
+      localStorage.setItem(KEY_PRESENT,'1');
+      localStorage.setItem(KEY_FUTURE,'1');
+      msg.textContent = 'Thanks! Your response was recorded.';
+    } catch (_) {
+      msg.textContent = 'Submission failed. Please try again.';
+      btn.disabled = false;
+    }
+  }
+
+  function clamp(x){ return Math.max(0, Math.min(100, Number(x||0))); }
+  function r1(x){ return Math.round(x*10)/10; }
+
+  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', ready); else ready();
+})();
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Veritas AI — Live Aggregation</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script defer src="assets/config.js"></script>
+  <script>
+    async function loadCSV(u){ const r=await fetch(u); return await r.text(); }
+    function rows(csv){ return csv.trim().split(/\r?\n/).map(r=>r.split(',')); }
+    function num(x){ const n=parseFloat(x); return isNaN(n)?null:n; }
+    function plot(el, title, pts){
+      const a=pts.map(p=>p.a), b=pts.map(p=>p.b), c=pts.map(p=>p.c);
+      Plotly.newPlot(el,[{type:'scatterternary',mode:'markers',a,b,c,marker:{size:8}}],
+        {title, ternary:{aaxis:{title:'CLP'}, baxis:{title:'PSE'}, caxis:{title:'AT'}},
+         margin:{l:10,r:10,b:10,t:40}}, {displaylogo:false});
+    }
+    async function init(){
+      const url=(window.SURVEY_CONFIG||{}).RESPONSES_CSV_URL;
+      if(!url){ document.getElementById('msg').textContent='RESPONSES_CSV_URL not set.'; return; }
+      const csv=await loadCSV(url), rs=rows(csv), head=rs[0].map(h=>h.trim().toLowerCase());
+      const ix = n => head.indexOf(n);
+      const present=[], future=[];
+      for(let i=1;i<rs.length;i++){
+        const r=rs[i];
+        const p={a:num(r[ix('present_clp')]), b:num(r[ix('present_pse')]), c:num(r[ix('present_at')])};
+        const f={a:num(r[ix('future_clp')]),  b:num(r[ix('future_pse')]),  c:num(r[ix('future_at')])};
+        if(p.a!=null&&p.b!=null&&p.c!=null) present.push(p);
+        if(f.a!=null&&f.b!=null&&f.c!=null) future.push(f);
+      }
+      plot('present','Present (2025) — Aggregated',present);
+      plot('future','Future (2075) — Aggregated',future);
+      document.getElementById('msg').textContent=`Loaded ${present.length} present + ${future.length} future points.`;
+    }
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</head>
+<body>
+  <header class="header"><h1>Veritas AI — Live Aggregation</h1></header>
+  <main>
+    <p id="msg" class="small">Loading…</p>
+    <div class="grid">
+      <section class="card"><div id="present" style="height:460px"></div></section>
+      <section class="card"><div id="future" style="height:460px"></div></section>
+    </div>
+  </main>
+</body>
+</html>
+import math
+import pandas as pd
+import matplotlib.pyplot as plt
+
+INPUT_XLSX = 'values.xlsx'   # Download your Google Sheet as .xlsx
+PRESENT_SHEET = 0
+OUTPUT_PNG_PRESENT = 'aggregated_present.png'
+OUTPUT_PNG_FUTURE  = 'aggregated_future.png'
+
+COLS = dict(
+    present=['present_clp','present_pse','present_at'],
+    future=['future_clp','future_pse','future_at']
+)
+
+SQ3 = math.sqrt(3)
+
+def ternary_to_xy(a,b,c):
+    x = b + 0.5*c
+    y = (SQ3/2.0)*c
+    return x, y
+
+def draw_triangle(ax):
+    A=(0,0); B=(1,0); C=(0.5,SQ3/2)
+    ax.plot([A[0],B[0]],[A[1],B[1]])
+    ax.plot([B[0],C[0]],[B[1],C[1]])
+    ax.plot([C[0],A[0]],[C[1],A[1]])
+    ax.set_aspect('equal','box')
+    ax.set_xlim(-0.05,1.05); ax.set_ylim(-0.05,SQ3/2+0.05)
+    ax.set_xticks([]); ax.set_yticks([])
+    ax.text(-0.03,-0.03,'CLP', ha='right', va='top')
+    ax.text(1.03,-0.03,'PSE', ha='left', va='top')
+    ax.text(0.5, SQ3/2+0.03,'AT', ha='center', va='bottom')
+
+def plot_points(ax, df, cols):
+    a = df[cols[0]].astype(float)
+    b = df[cols[1]].astype(float)
+    c = df[cols[2]].astype(float)
+    valid = (a.notna() & b.notna() & c.notna())
+    a,b,c = a[valid], b[valid], c[valid]
+    sums = (a+b+c)
+    a,b,c = a/sums, b/sums, c/sums
+    xy = [ternary_to_xy(ai,bi,ci) for ai,bi,ci in zip(a,b,c)]
+    if xy:
+        xs, ys = zip(*xy)
+        ax.scatter(xs, ys, s=18)
+
+if __name__ == '__main__':
+    df = pd.read_excel(INPUT_XLSX, sheet_name=PRESENT_SHEET)
+
+    fig1, ax1 = plt.subplots(figsize=(5,4))
+    draw_triangle(ax1)
+    plot_points(ax1, df, COLS['present'])
+    ax1.set_title('Present (2025) — Aggregated')
+    fig1.tight_layout(); fig1.savefig(OUTPUT_PNG_PRESENT, dpi=160)
+
+    fig2, ax2 = plt.subplots(figsize=(5,4))
+    draw_triangle(ax2)
+    plot_points(ax2, df, COLS['future'])
+    ax2.set_title('Future (2075) — Aggregated')
+    fig2.tight_layout(); fig2.savefig(OUTPUT_PNG_FUTURE, dpi=160)
+
+    print('Saved:', OUTPUT_PNG_PRESENT, OUTPUT_PNG_FUTURE)
