@@ -1,251 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Veritas AI — Values Survey</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script defer src="assets/config.js"></script>
+  <script defer src="assets/script.js"></script>
+</head>
+<body>
+  <header class="header">
+    <h1>Veritas AI — Values Survey</h1>
+    <div>Place one dot on each triangle to show priorities for <b>today</b> and <b>2075</b>.</div>
+  </header>
+  <main>
+    <div class="notice">Anonymous. One submission per plot on this device.</div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Present (2025)</h2>
+        <div id="ternary-present" style="height:460px"></div>
+        <div class="small" id="present-readout">CLP: –, PSE: –, AT: – (must sum to 100)</div>
+      </section>
+
+      <section class="card">
+        <h2>Future (2075)</h2>
+        <div id="ternary-future" style="height:460px"></div>
+        <div class="small" id="future-readout">CLP: –, PSE: –, AT: – (must sum to 100)</div>
+      </section>
+    </div>
+
+    <section class="card">
+      <h3>Submit</h3>
+      <p>After placing both dots, click Submit.</p>
+      <button id="submitBtn" disabled>Submit</button>
+      <div id="submitMsg" class="small"></div>
+    </section>
+
+    <p class="footer">Values — CLP: Civil Liberties & Privacy · PSE: Public Safety & Effectiveness · AT: Accountability & Transparency</p>
+  </main>
+</body>
+</html>
 :root { --maxw: 1024px; }
 * { box-sizing: border-box; }
 body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 0; }
-.header { background:#0f172a; color:white; padding: 24px; }
-.header h1 { margin: 0 0 4px 0; font-size: 28px; }
-main { max-width: var(--maxw); margin: 0 auto; padding: 24px; }
-.grid { display:grid; grid-template-columns: 1fr; gap:24px; }
-@media(min-width: 980px){ .grid { grid-template-columns: 1fr 1fr; } }
-.card { border:1px solid #e5e7eb; border-radius: 14px; padding:16px; }
+.header { background:#0f172a; color:white; padding:24px; }
+.header h1 { margin:0 0 4px 0; font-size:28px; }
+main { max-width:var(--maxw); margin:0 auto; padding:24px; }
+.grid { display:grid; grid-template-columns:1fr; gap:24px; }
+@media(min-width:980px){ .grid { grid-template-columns:1fr 1fr; } }
+.card { border:1px solid #e5e7eb; border-radius:14px; padding:16px; }
 button { padding:10px 16px; border-radius:10px; border:1px solid #11182710; cursor:pointer; }
-button:disabled { opacity: 0.6; cursor:not-allowed; }
-.small { font-size: 12px; color:#374151; }
-.footer { color:#6b7280; font-size: 12px; margin-top: 16px; }
-label { display:block; margin: 8px 0 4px; font-weight:600; }
+button:disabled { opacity:0.6; cursor:not-allowed; }
+.small { font-size:12px; color:#374151; }
+.footer { color:#6b7280; font-size:12px; margin-top:16px; }
 .notice { background:#fef3c7; border:1px solid #fde68a; padding:12px; border-radius:8px; }
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Veritas AI — Values Survey</title>
-<link rel="stylesheet" href="assets/styles.css" />
-<script src="assets/lib/plotly-2.32.0.min.js"></script>
-<script defer src="assets/config.js"></script>
-<script defer src="assets/script.js"></script>
-</head>
-<body>
-<header class="header">
-<h1>Veritas AI — Values Survey</h1>
-<div>Place one dot on each triangle to indicate the relative importance **today** and in **2075**.</div>
-</header>
-<main>
-<div class="notice">Your responses are anonymous. One submission per plot is enforced on this device.</div>
-
-
-<div class="grid">
-<section class="card">
-<h2>Present (2025)</h2>
-<div id="ternary-present" style="height:460px"></div>
-<div class="small" id="present-readout">CLP: –, PSE: –, AT: – (must sum to 100)</div>
-</section>
-
-
-<section class="card">
-<h2>Future (2075)</h2>
-<div id="ternary-future" style="height:460px"></div>
-<div class="small" id="future-readout">CLP: –, PSE: –, AT: – (must sum to 100)</div>
-</section>
-</div>
-
-
-<section class="card">
-<h3>Submit</h3>
-<p>After placing both dots, click **Submit**.</p>
-<button id="submitBtn" disabled>Submit</button>
-<div id="submitMsg" class="small"></div>
-</section>
-
-
-<p class="footer">Values: CLP = Civil Liberties & Privacy · PSE = Public Safety & Effectiveness · AT = Accountability & Transparency</p>
-</main>
-</body>
-</html>
-(function(){
-updateSubmitEnabled();
-});
-}
-
-
-function redrawPoint(gd, A,B,C){
-Plotly.restyle(gd, { a:[[A]], b:[[B]], c:[[C]] }, [0]);
-}
-
-
-function updateReadout(which, A,B,C){
-const id = which === 'present' ? 'present-readout' : 'future-readout';
-document.getElementById(id).textContent = `CLP: ${A} · PSE: ${B} · AT: ${C} (sum 100)`;
-}
-
-
-function updateSubmitEnabled(){
-const btn = document.getElementById('submitBtn');
-const done = !!state.present && !!state.future;
-const blocked = localStorage.getItem(KEY_PRESENT) && localStorage.getItem(KEY_FUTURE);
-btn.disabled = !done || blocked;
-}
-
-
-function maybeDisableIfAlreadySubmitted(){
-const presentSet = localStorage.getItem(KEY_PRESENT);
-const futureSet = localStorage.getItem(KEY_FUTURE);
-if (presentSet) document.getElementById('present-readout').textContent += ' · (submitted on this device)';
-if (futureSet) document.getElementById('future-readout').textContent += ' · (submitted on this device)';
-}
-
-
-async function onSubmit(){
-const btn = document.getElementById('submitBtn');
-const msg = document.getElementById('submitMsg');
-if (!CFG.GOOGLE_FORM_ACTION) { msg.textContent = 'Form is not configured.'; return; }
-if (!state.present || !state.future) { msg.textContent = 'Please select both points.'; return; }
-
-
-btn.disabled = true; msg.textContent = 'Submitting…';
-
-
-// Construct FormData
-const fd = new FormData();
-fd.append(CFG.ENTRY_IDS.present_clp, state.present.a);
-fd.append(CFG.ENTRY_IDS.present_pse, state.present.b);
-fd.append(CFG.ENTRY_IDS.present_at, state.present.c);
-fd.append(CFG.ENTRY_IDS.future_clp, state.future.a);
-fd.append(CFG.ENTRY_IDS.future_pse, state.future.b);
-fd.append(CFG.ENTRY_IDS.future_at, state.future.c);
-
-
-try {
-const r = await fetch(CFG.GOOGLE_FORM_ACTION, { method:'POST', mode:'no-cors', body: fd });
-// no-cors always opaque; treat as success
-localStorage.setItem(KEY_PRESENT, '1');
-localStorage.setItem(KEY_FUTURE, '1');
-msg.textContent = 'Thanks! Your response was recorded.';
-} catch (e) {
-msg.textContent = 'Submission failed. Please try again.';
-btn.disabled = false;
-}
-}
-
-
-function clampPct(x){ return Math.max(0, Math.min(100, Number(x||0))); }
-function round1(x){ return Math.round(x*10)/10; }
-
-
-if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready); else ready();
-})();
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Veritas AI — Live Aggregation</title>
-<link rel="stylesheet" href="assets/styles.css" />
-<script src="assets/lib/plotly-2.32.0.min.js"></script>
-<script defer src="assets/config.js"></script>
-<script>
-async function loadCSV(url){ const r = await fetch(url); return await r.text(); }
-function csvToRows(csv){ return csv.trim().split(/\r?\n/).map(r=>r.split(',')); }
-function number(x){ const n = parseFloat(x); return isNaN(n)?null:n; }
-
-
-function makePlot(el, title, points){
-const a = points.map(p=>p.a), b = points.map(p=>p.b), c = points.map(p=>p.c);
-const data = [{ type:'scatterternary', mode:'markers', a, b, c, marker:{ size:8 } }];
-const layout = { title, ternary:{ aaxis:{title:'CLP'}, baxis:{title:'PSE'}, caxis:{title:'AT'} }, margin:{l:10,r:10,b:10,t:40} };
-Plotly.newPlot(el, data, layout, {displaylogo:false});
-}
-
-
-async function init(){
-const url = (window.SURVEY_CONFIG||{}).RESPONSES_CSV_URL;
-if(!url){ document.getElementById('msg').textContent='RESPONSES_CSV_URL not set.'; return; }
-const csv = await loadCSV(url);
-const rows = csvToRows(csv);
-const head = rows[0];
-const c = (name)=> head.findIndex(h=> h.trim().toLowerCase()===name.toLowerCase());
-const ix = {
-present_clp: c('present_clp'), present_pse: c('present_pse'), present_at: c('present_at'),
-future_clp: c('future_clp'), future_pse: c('future_pse'), future_at: c('future_at')
-};
-const present=[], future=[];
-for(let i=1;i<rows.length;i++){
-const r = rows[i];
-const p = {a:number(r[ix.present_clp]), b:number(r[ix.present_pse]), c:number(r[ix.present_at])};
-const f = {a:number(r[ix.future_clp]), b:number(r[ix.future_pse]), c:number(r[ix.future_at])};
-if(p.a!=null&&p.b!=null&&p.c!=null) present.push(p);
-if(f.a!=null&&f.b!=null&&f.c!=null) future.push(f);
-}
-makePlot('present', 'Present (2025) — Aggregated', present);
-makePlot('future', 'Future (2075) — Aggregated', future);
-document.getElementById('msg').textContent = `Loaded ${present.length} present + ${future.length} future points.`;
-}
-document.addEventListener('DOMContentLoaded', init);
-</script>
-</head>
-<body>
-<header class="header"><h1>Veritas AI — Live Aggregation</h1></header>
-<main>
-<p id="msg" class="small">Loading…</p>
-<div class="grid">
-<section class="card"><div id="present" style="height:460px"></div></section>
-<section class="card"><div id="future" style="height:460px"></div></section>
-</div>
-</main>
-</body>
-</html>
-import math
-def draw_triangle(ax):
-A=(0,0); B=(1,0); C=(0.5,SQ3/2)
-ax.plot([A[0],B[0]],[A[1],B[1]])
-ax.plot([B[0],C[0]],[B[1],C[1]])
-ax.plot([C[0],A[0]],[C[1],A[1]])
-ax.set_aspect('equal', 'box')
-ax.set_xlim(-0.05,1.05)
-ax.set_ylim(-0.05,SQ3/2+0.05)
-ax.set_xticks([]); ax.set_yticks([])
-ax.text(-0.03,-0.03,'CLP', ha='right', va='top')
-ax.text(1.03,-0.03,'PSE', ha='left', va='top')
-ax.text(0.5, SQ3/2+0.03,'AT', ha='center', va='bottom')
-
-
-
-
-def plot_points(ax, df, cols):
-a = df[cols[0]].astype(float)
-b = df[cols[1]].astype(float)
-c = df[cols[2]].astype(float)
-valid = (a.notna() & b.notna() & c.notna())
-a,b,c = a[valid], b[valid], c[valid]
-
-
-# normalize rows to sum 1
-sums = (a+b+c)
-a,b,c = a/sums, b/sums, c/sums
-xy = [ternary_to_xy(ai,bi,ci) for ai,bi,ci in zip(a,b,c)]
-xs, ys = zip(*xy) if xy else ([],[])
-ax.scatter(xs, ys, s=18)
-
-
-
-
-if __name__ == '__main__':
-df = pd.read_excel(INPUT_XLSX, sheet_name=PRESENT_SHEET)
-
-
-fig1, ax1 = plt.subplots(figsize=(5,4))
-draw_triangle(ax1)
-plot_points(ax1, df, COLS['present'])
-ax1.set_title('Present (2025) — Aggregated')
-fig1.tight_layout(); fig1.savefig(OUTPUT_PNG_PRESENT, dpi=160)
-
-
-fig2, ax2 = plt.subplots(figsize=(5,4))
-draw_triangle(ax2)
-plot_points(ax2, df, COLS['future'])
-ax2.set_title('Future (2075) — Aggregated')
-fig2.tight_layout(); fig2.savefig(OUTPUT_PNG_FUTURE, dpi=160)
-
-
-print('Saved:', OUTPUT_PNG_PRESENT, OUTPUT_PNG_FUTURE)
-Timestamp,present_clp,present_pse,present_at,future_clp,future_pse,future_at
-2025-10-10 12:00:00, 30, 50, 20, 40, 35, 25
