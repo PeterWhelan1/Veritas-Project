@@ -3,263 +3,214 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Values Ternary Survey – Veritas AI & Public Trust in Policing</title>
+  <title>Veritas AI — Policing Trust Ternary Survey (Section 5)</title>
+  <meta name="description" content="Two ternary plots (Today & 2075) collecting anonymous votes to study value trade‑offs in policing trust. Built for MIS20070 Section 5." />
   <style>
-    :root{--bg:#0b1020;--panel:#111633;--ink:#f4f7ff;--muted:#9fb3ff;--accent:#6ea8fe;--good:#80ed99}
-    html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
-    .wrap{max-width:1000px;margin:0 auto;padding:24px}
-    h1{font-size:clamp(1.2rem,2.5vw,1.8rem);margin:0 0 8px}
-    p.lede{color:var(--muted);margin-top:0}
-    .card{background:var(--panel);border-radius:18px;padding:18px 18px 22px;box-shadow:0 8px 24px rgba(0,0,0,.25);margin:16px 0}
-    .grid{display:grid;gap:18px;grid-template-columns:1fr;}
-    @media (min-width:980px){.grid{grid-template-columns:1fr 1fr}}
-    .tri{position:relative;user-select:none}
+    :root{
+      --bg:#0b1020; --panel:#10183a; --ink:#eef1ff; --muted:#a8b3ff; --accent:#78a6ff; --accent-2:#5dd39e;
+      --border:#2a3469; --ink-dim:#c9d3ff; --warn:#ffd166;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    h1{font-size:clamp(1.25rem,3.4vw,2rem);margin:.2rem 0 .6rem}
+    h2{font-size:clamp(1rem,2.4vw,1.35rem)}
+    .lede{color:var(--ink-dim)}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 8px 28px rgba(0,0,0,.25);margin:16px 0}
+    .grid{display:grid;gap:18px}
+    @media(min-width:980px){.grid{grid-template-columns:1fr 1fr}}
+    .tri{position:relative}
     svg{width:100%;height:auto;display:block}
+    .axis{stroke:#526;stroke-width:1}
     .tri .label{position:absolute;font-size:14px;color:var(--ink);text-align:center;max-width:34ch}
-    .tri .label strong{display:block}
-    .axis{stroke:#556;stroke-width:1}
+    .tri .label small{display:block;color:var(--muted)}
     .vertex{fill:#cbd5ff}
-    .dot{fill:var(--good);stroke:#0a0;stroke-width:1.5;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
-    .hint{color:var(--muted);font-size:14px;margin:6px 0 0}
+    .dot{fill:var(--accent-2);stroke:#0b3d2e;stroke-width:1.5;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))}
     .nums{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
-    .nums output{background:#0d1230;border:1px solid #2a3469;border-radius:10px;padding:6px 10px;min-width:120px}
-    .btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
-    button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;background:var(--accent);color:#08102b;font-weight:700}
-    button.secondary{background:#253061;color:#d6deff}
-    button[disabled]{opacity:.5;cursor:not-allowed}
+    .nums output{background:#0d1230;border:1px solid var(--border);border-radius:10px;padding:6px 10px;min-width:120px}
+    .btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;font-weight:700}
+    .primary{background:var(--accent);color:#0b122e}
+    .secondary{background:#223067;color:#dbe5ff}
+    button[disabled]{opacity:.6;cursor:not-allowed}
+    .hint{color:var(--muted);font-size:14px;margin:.4rem 0 0}
     .foot{font-size:13px;color:#9bb0ff;margin-top:20px}
-    .req{color:#ffd166}
-    input[type="text"], textarea{width:100%;background:#0d1230;color:#e9edff;border:1px solid #2a3469;border-radius:10px;padding:10px}
-    a{color:#a9c5ff}
+    input[type="text"], textarea{width:100%;background:#0d1230;color:#e9edff;border:1px solid var(--border);border-radius:10px;padding:10px}
+    a{color:#b8ccff}
+    .req{color:var(--warn)}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Tell us how society should balance policing values</h1>
-    <p class="lede">Place a single dot on <em>each</em> triangle to show the balance between three values that often trade off in policing. Then submit. We’ll aggregate anonymous results to study how views today compare with expectations for <strong>2075</strong>.</p>
+    <h1>Veritas AI — Rebuilding Trust Through Accountable Policing</h1>
+    <p class="lede">Place one dot on <strong>each</strong> triangle to show how society should balance three values in policing <em>today</em> and in <strong>2075</strong>. Your responses are anonymous and help us analyse value shifts over time for the MIS20070 group project (Section 5).</p>
 
     <div class="card">
-      <p><strong>The three values</strong> (visible at the triangle corners):</p>
-      <ul>
-        <li><strong>Transparency & Accountability</strong> — public oversight, auditability, swift review of incidents.</li>
-        <li><strong>Privacy & Civil Liberties</strong> — protections for bystanders, suspects, and officers (e.g., automatic face blurring).</li>
-        <li><strong>Operational Effectiveness & Safety</strong> — timely information for safer, efficient policing and fewer false complaints.</li>
-      </ul>
-      <p class="hint">Idea context: <em>Veritas AI</em> uses bodycam footage to flag potential misconduct in near‑real time while preserving privacy with automatic blurring and human review.</p>
+      <h2>Context</h2>
+      <p>
+        Public trust in policing is under strain. <em>Veritas AI</em> proposes to turn body‑camera footage into a privacy‑preserving accountability tool that flags potential misconduct (e.g., excessive force, unlawful searches, discrimination) and compiles short, time‑stamped clips for human review. Civilians’ faces are blurred automatically and every AI flag is checked by a human before any sharing.
+      </p>
     </div>
 
-    <form id="form" class="card" action="https://formspree.io/f/xqagazql
-      <h2 style="margin-top:0">Your responses</h2>
+    <form id="survey" class="card" action="https://formspree.io/f/xqagazql
+      <h2>Your inputs</h2>
+
       <div class="grid">
-        <div>
-          <h3 style="margin:.2rem 0 .5rem">Today (2025)</h3>
+        <section>
+          <h3>Triangle A — <em>Today (2025)</em></h3>
           <div id="tri-today" class="tri"></div>
-          <p class="hint">Click anywhere inside the triangle. You can click again to adjust.</p>
           <div class="nums">
             <output id="out-today-a"><strong>Transparency & Accountability:</strong> <span>—</span>%</output>
             <output id="out-today-b"><strong>Privacy & Civil Liberties:</strong> <span>—</span>%</output>
             <output id="out-today-c"><strong>Operational Effectiveness & Safety:</strong> <span>—</span>%</output>
           </div>
-        </div>
-        <div>
-          <h3 style="margin:.2rem 0 .5rem">Future (2075)</h3>
+          <p class="hint">Click/tap anywhere inside the triangle to place or move your dot. The three percentages will always sum to 100.</p>
+        </section>
+
+        <section>
+          <h3>Triangle B — <em>Future (2075)</em></h3>
           <div id="tri-future" class="tri"></div>
-          <p class="hint">Click anywhere inside the triangle. You can click again to adjust.</p>
           <div class="nums">
             <output id="out-future-a"><strong>Transparency & Accountability:</strong> <span>—</span>%</output>
             <output id="out-future-b"><strong>Privacy & Civil Liberties:</strong> <span>—</span>%</output>
             <output id="out-future-c"><strong>Operational Effectiveness & Safety:</strong> <span>—</span>%</output>
           </div>
-        </div>
+          <p class="hint">Set a dot for 2075 as you imagine future priorities.</p>
+        </section>
       </div>
 
-      <!-- Hidden fields to send to Formspree -->
+      <!-- Hidden fields submitted to Formspree -->
       <input type="hidden" name="today_transparency_accountability" id="today-a" required>
       <input type="hidden" name="today_privacy_civil_liberties" id="today-b" required>
       <input type="hidden" name="today_effectiveness_safety" id="today-c" required>
-
       <input type="hidden" name="future_transparency_accountability" id="future-a" required>
       <input type="hidden" name="future_privacy_civil_liberties" id="future-b" required>
       <input type="hidden" name="future_effectiveness_safety" id="future-c" required>
-
       <input type="hidden" name="timestamp_iso" id="ts">
-      <input type="hidden" name="source" value="MIS20070 Section 5 – Veritas AI">
+      <input type="hidden" name="source" value="MIS20070 Section 5 – Veritas AI Ternary">
 
       <div class="card" style="margin-top:18px">
-        <label for="comment"><strong>Optional comment</strong> (e.g., why you prioritised these values)</label>
-        <textarea id="comment" name="comment" rows="3" placeholder="Your thoughts…"></textarea>
+        <label for="comment"><strong>Optional comment</strong> — why you prioritised these values</label>
+        <textarea id="comment" name="comment" rows="3" placeholder="Your thoughts… (no personal info please)"></textarea>
       </div>
 
-      <div class="btnrow">
-        <button type="button" class="secondary" id="reset">Reset</button>
-        <button id="submitBtn" type="submit" disabled>Submit both answers</button>
+      <div class="btns">
+        <button type="button" class="secondary" id="resetBtn">Reset</button>
+        <button id="submitBtn" class="primary" type="submit" disabled>Submit both answers</button>
       </div>
-      <p class="hint">Your browser will prevent duplicate submissions on this device. <span class="req">You must place a dot on both triangles to enable the submit button.</span></p>
-      <p class="foot">Data policy: We only collect the six percentages above plus the optional comment and a timestamp. No personal identifiers are requested. Built for UCD MIS20070 (Section 5).</p>
+      <p class="hint"><span class="req">Required:</span> place a dot on <strong>both</strong> triangles to enable Submit. This page limits to one submission per device.</p>
+      <p class="foot">We only collect the six percentages, the optional comment, and a timestamp. No personal identifiers requested.</p>
     </form>
 
-    <p class="foot">After you collect 50+ responses, export from Formspree as CSV and use the provided Python script to produce the aggregated ternary plot.</p>
+    <p class="foot">Built for UCD MIS20070 Digital Society — Section 5 (ternary survey). After collecting ≥50 responses, export CSV from Formspree and aggregate for your report.</p>
   </div>
 
   <script>
-  // ---------- Geometry helpers (barycentric coordinates) ----------
+  // ---------------- Geometry helpers (barycentric) ----------------
   function barycentric(P, A, B, C){
-    // Returns {u,v,w} s.t. P = u*A + v*B + w*C and u+v+w=1
-    const v0 = {x: B.x - A.x, y: B.y - A.y};
-    const v1 = {x: C.x - A.x, y: C.y - A.y};
-    const v2 = {x: P.x - A.x, y: P.y - A.y};
-    const d00 = v0.x*v0.x + v0.y*v0.y;
-    const d01 = v0.x*v1.x + v0.y*v1.y;
-    const d11 = v1.x*v1.x + v1.y*v1.y;
-    const d20 = v2.x*v0.x + v2.y*v0.y;
-    const d21 = v2.x*v1.x + v2.y*v1.y;
-    const denom = d00 * d11 - d01 * d01;
-    let v = (d11 * d20 - d01 * d21) / denom;
-    let w = (d00 * d21 - d01 * d20) / denom;
-    let u = 1 - v - w;
-    return {u, v, w};
+    const v0={x:B.x-A.x,y:B.y-A.y}, v1={x:C.x-A.x,y:C.y-A.y}, v2={x:P.x-A.x,y:P.y-A.y};
+    const d00=v0.x*v0.x+v0.y*v0.y, d01=v0.x*v1.x+v0.y*v1.y, d11=v1.x*v1.x+v1.y*v1.y;
+    const d20=v2.x*v0.x+v2.y*v0.y, d21=v2.x*v1.x+v2.y*v1.y;
+    const denom=d00*d11-d01*d01; let v=(d11*d20-d01*d21)/denom; let w=(d00*d21-d01*d20)/denom; let u=1-v-w; return {u,v,w};
   }
-  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
-  function inside({u,v,w}){ return u>=0 && v>=0 && w>=0; }
-  function toPercent(x){ return Math.round(x*100); }
+  function clamp01(x){return Math.max(0,Math.min(1,x));}
+  function toPct(x){return Math.round(x*100);} // integer 0..100
 
-  // ---------- Reusable Ternary component (SVG) ----------
-  function makeTernary(el, idPrefix){
-    const pad = 24; const W = el.clientWidth || 440; const H = Math.round(W*0.85);
-    const h = Math.sqrt(3)/2; // equilateral triangle height factor
+  // ---------------- Reusable ternary widget ----------------
+  function Ternary(container, idPrefix){
+    const pad=24; const W=container.clientWidth||460; const H=Math.round(W*0.85); const h=Math.sqrt(3)/2;
+    const A={x:W/2, y:pad};
+    const B={x:pad, y:pad+h*(W-2*pad)};
+    const C={x:W-pad, y:pad+h*(W-2*pad)};
 
-    const A = {x: W/2, y: pad};                                  // top (Transparency & Accountability)
-    const B = {x: pad, y: pad + h*(W-2*pad)};                    // bottom-left (Privacy & Civil Liberties)
-    const C = {x: W - pad, y: pad + h*(W-2*pad)};                // bottom-right (Operational Effectiveness & Safety)
+    container.innerHTML=''; container.style.minHeight=H+'px';
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'); svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
 
-    el.innerHTML = '';
-    el.style.minHeight = H+"px";
+    // Outer triangle
+    const poly=document.createElementNS(svg.namespaceURI,'polygon');
+    poly.setAttribute('points',`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`);
+    poly.setAttribute('fill','#141b3d'); poly.setAttribute('stroke','#445'); poly.setAttribute('stroke-width','2'); svg.appendChild(poly);
 
-    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-
-    // Triangle and gridlines (10% iso-lines)
-    const tri = document.createElementNS(svg.namespaceURI,'polygon');
-    tri.setAttribute('points',`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`);
-    tri.setAttribute('fill','#151a3c');
-    tri.setAttribute('stroke','#445');
-    tri.setAttribute('stroke-width','2');
-    svg.appendChild(tri);
-
-    // Simple axis ticks (every 20%) from each edge
+    // Grid lines (every 20% from the top vertex)
     for(let t=0.2;t<1;t+=0.2){
-      const p1 = {x: (1-t)*A.x + t*B.x, y: (1-t)*A.y + t*B.y};
-      const p2 = {x: (1-t)*A.x + t*C.x, y: (1-t)*A.y + t*C.y};
-      const line = document.createElementNS(svg.namespaceURI,'line');
-      line.setAttribute('x1',p1.x); line.setAttribute('y1',p1.y);
-      line.setAttribute('x2',p2.x); line.setAttribute('y2',p2.y);
-      line.setAttribute('class','axis');
-      svg.appendChild(line);
+      const p1={x:(1-t)*A.x+t*B.x, y:(1-t)*A.y+t*B.y};
+      const p2={x:(1-t)*A.x+t*C.x, y:(1-t)*A.y+t*C.y};
+      const line=document.createElementNS(svg.namespaceURI,'line');
+      line.setAttribute('x1',p1.x); line.setAttribute('y1',p1.y); line.setAttribute('x2',p2.x); line.setAttribute('y2',p2.y);
+      line.setAttribute('class','axis'); svg.appendChild(line);
     }
 
     // Vertices
-    [A,B,C].forEach(v=>{
-      const c = document.createElementNS(svg.namespaceURI,'circle');
-      c.setAttribute('cx',v.x); c.setAttribute('cy',v.y); c.setAttribute('r',4);
-      c.setAttribute('class','vertex');
-      svg.appendChild(c);
-    });
+    [A,B,C].forEach(v=>{const c=document.createElementNS(svg.namespaceURI,'circle'); c.setAttribute('cx',v.x); c.setAttribute('cy',v.y); c.setAttribute('r',4); c.setAttribute('class','vertex'); svg.appendChild(c);});
 
-    // Clickable overlay to capture clicks
-    const overlay = document.createElementNS(svg.namespaceURI,'polygon');
-    overlay.setAttribute('points',`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`);
-    overlay.setAttribute('fill','transparent');
-    overlay.style.cursor = 'crosshair';
-    svg.appendChild(overlay);
+    // Clickable overlay
+    const overlay=document.createElementNS(svg.namespaceURI,'polygon'); overlay.setAttribute('points',`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`); overlay.setAttribute('fill','transparent'); overlay.style.cursor='crosshair'; svg.appendChild(overlay);
 
     // Dot
-    const dot = document.createElementNS(svg.namespaceURI,'circle');
-    dot.setAttribute('r',6);
-    dot.setAttribute('class','dot');
-    dot.style.display = 'none';
-    svg.appendChild(dot);
+    const dot=document.createElementNS(svg.namespaceURI,'circle'); dot.setAttribute('r',6); dot.setAttribute('class','dot'); dot.style.display='none'; svg.appendChild(dot);
 
-    el.appendChild(svg);
+    container.appendChild(svg);
 
-    // Labels at corners (kept outside SVG for crisp text)
-    const labels = [
-      {el: document.createElement('div'), pos:{left:A.x-110, top:A.y-26}, html:'<strong>Transparency & Accountability</strong><span class="hint">(public oversight)</span>'},
-      {el: document.createElement('div'), pos:{left:B.x-120, top:B.y+6}, html:'<strong>Privacy & Civil Liberties</strong><span class="hint">(face blurring, due process)</span>'},
-      {el: document.createElement('div'), pos:{left:C.x-120, top:C.y+6}, html:'<strong>Operational Effectiveness & Safety</strong><span class="hint">(fewer false complaints)</span>'},
+    // Labels (outside SVG for crispness)
+    const labels=[
+      {el:document.createElement('div'), pos:{left:A.x-120, top:A.y-26}, html:'<strong>Transparency & Accountability</strong><small>public oversight, auditability</small>'},
+      {el:document.createElement('div'), pos:{left:B.x-120, top:B.y+6},  html:'<strong>Privacy & Civil Liberties</strong><small>face blurring, due process</small>'},
+      {el:document.createElement('div'), pos:{left:C.x-120, top:C.y+6},  html:'<strong>Operational Effectiveness & Safety</strong><small>fewer false complaints, training</small>'},
     ];
-    labels.forEach(l=>{ l.el.className='label'; l.el.style.left=l.pos.left+'px'; l.el.style.top=l.pos.top+'px'; l.el.innerHTML=l.html; el.appendChild(l.el); });
-
-    let state = null; // {u,v,w,x,y}
+    labels.forEach(l=>{l.el.className='label'; l.el.style.left=l.pos.left+'px'; l.el.style.top=l.pos.top+'px'; l.el.innerHTML=l.html; container.appendChild(l.el);});
 
     function setFromPoint(px,py){
-      const bc = barycentric({x:px,y:py}, A, B, C);
-      // If clicked outside, gently clamp back to the nearest point inside
-      let u = clamp01(bc.u), v = clamp01(bc.v), w = clamp01(bc.w);
-      const s = u+v+w; u/=s; v/=s; w/=s;
-      const x = u*A.x + v*B.x + w*C.x; const y = u*A.y + v*B.y + w*C.y;
-      state = {u,v,w,x,y};
-      dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.style.display = 'block';
-      // update outputs + hidden inputs
-      document.querySelector(`#out-${idPrefix}-a span`).textContent = toPercent(u);
-      document.querySelector(`#out-${idPrefix}-b span`).textContent = toPercent(v);
-      document.querySelector(`#out-${idPrefix}-c span`).textContent = toPercent(w);
-      document.getElementById(`${idPrefix}-a`).value = toPercent(u);
-      document.getElementById(`${idPrefix}-b`).value = toPercent(v);
-      document.getElementById(`${idPrefix}-c`).value = toPercent(w);
-      enableIfReady();
+      const bc=barycentric({x:px,y:py},A,B,C);
+      let u=clamp01(bc.u), v=clamp01(bc.v), w=clamp01(bc.w); const s=u+v+w; u/=s; v/=s; w/=s; // normalise inside triangle
+      const x=u*A.x+v*B.x+w*C.x, y=u*A.y+v*B.y+w*C.y; dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.style.display='block';
+      document.querySelector(`#out-${idPrefix}-a span`).textContent=toPct(u);
+      document.querySelector(`#out-${idPrefix}-b span`).textContent=toPct(v);
+      document.querySelector(`#out-${idPrefix}-c span`).textContent=toPct(w);
+      document.getElementById(`${idPrefix}-a`).value=toPct(u);
+      document.getElementById(`${idPrefix}-b`).value=toPct(v);
+      document.getElementById(`${idPrefix}-c`).value=toPct(w);
+      enableSubmitIfReady();
     }
 
-    overlay.addEventListener('click', (ev)=>{
-      const rect = svg.getBoundingClientRect();
-      const px = ev.clientX - rect.left;
-      const py = ev.clientY - rect.top;
-      setFromPoint(px,py);
-    });
+    overlay.addEventListener('click', (ev)=>{ const r=svg.getBoundingClientRect(); setFromPoint(ev.clientX-r.left, ev.clientY-r.top); });
 
-    return {
-      reset(){ state=null; dot.style.display='none'; ['a','b','c'].forEach(sfx=>{ const o=document.querySelector(`#out-${idPrefix}-${sfx} span`); if(o) o.textContent='—'; const h=document.getElementById(`${idPrefix}-${sfx}`); if(h) h.value=''; }); }
-    };
+    return { reset(){ dot.style.display='none'; ['a','b','c'].forEach(sfx=>{ const o=document.querySelector(`#out-${idPrefix}-${sfx} span`); if(o) o.textContent='—'; const h=document.getElementById(`${idPrefix}-${sfx}`); if(h) h.value='';}); } };
   }
 
-  // ---------- App wiring ----------
-  const triToday = makeTernary(document.getElementById('tri-today'), 'today');
-  const triFuture = makeTernary(document.getElementById('tri-future'), 'future');
+  // ---------------- Page wiring ----------------
+  const triToday=Ternary(document.getElementById('tri-today'),'today');
+  const triFuture=Ternary(document.getElementById('tri-future'),'future');
 
-  function enableIfReady(){
-    const ok = ['today-a','today-b','today-c','future-a','future-b','future-c'].every(id=>{
-      const v = document.getElementById(id).value; return v !== '' && !isNaN(Number(v));
-    });
-    document.getElementById('submitBtn').disabled = !ok || wasSubmitted();
+  function hasValues(){
+    const ids=['today-a','today-b','today-c','future-a','future-b','future-c'];
+    return ids.every(id=>{const v=document.getElementById(id).value; return v!=='' && !isNaN(Number(v));});
   }
+  function enableSubmitIfReady(){ document.getElementById('submitBtn').disabled=!hasValues() || alreadySubmitted(); }
 
-  function wasSubmitted(){ return localStorage.getItem('veritas-ternary-submitted') === '1'; }
-
+  function alreadySubmitted(){ return localStorage.getItem('veritas-ternary-submitted')==='1'; }
   function markSubmitted(){ localStorage.setItem('veritas-ternary-submitted','1'); }
 
-  document.getElementById('reset').addEventListener('click', ()=>{ triToday.reset(); triFuture.reset(); enableIfReady(); });
+  document.getElementById('resetBtn').addEventListener('click', ()=>{ triToday.reset(); triFuture.reset(); enableSubmitIfReady(); });
 
-  // Timestamp
-  document.getElementById('ts').value = new Date().toISOString();
+  // Timestamp (UTC iso)
+  document.getElementById('ts').value=new Date().toISOString();
 
-  // Prevent duplicate submissions on this device
-  if(wasSubmitted()){
-    document.getElementById('submitBtn').disabled = true;
-    const p = document.createElement('p');
-    p.className='hint';
-    p.innerHTML = 'This device has already submitted. Thank you!';
-    document.querySelector('form').appendChild(p);
+  // Device-level one-shot guard
+  if(alreadySubmitted()){
+    document.getElementById('submitBtn').disabled=true;
+    const p=document.createElement('p'); p.className='hint'; p.textContent='This device has already submitted. Thank you!'; document.getElementById('survey').appendChild(p);
   }
 
-  document.getElementById('form').addEventListener('submit', function(ev){
-    // As an extra guard, block if not completed
+  // Submit handling — keep it simple for Formspree (no AJAX) and mark submitted on click
+  document.getElementById('survey').addEventListener('submit', (ev)=>{
     if(document.getElementById('submitBtn').disabled){ ev.preventDefault(); return; }
+    markSubmitted();
   });
 
-  // After successful Formspree redirect, you can land on a thank-you page. If you keep same page, mark submitted:
-  // You may change this to Formspree's success page + back button if preferred.
-  window.addEventListener('pageshow', ()=>{ enableIfReady(); });
-  // When the request completes, Formspree will redirect; to support AJAX-free flow, we optimistically mark submitted after click:
-  document.getElementById('submitBtn').addEventListener('click', ()=>{ markSubmitted(); });
+  window.addEventListener('resize', ()=>{ // Rebuild on resize to keep labels placed well
+    // Simple approach: rebuild both widgets
+    Ternary(document.getElementById('tri-today'),'today');
+    Ternary(document.getElementById('tri-future'),'future');
+  });
   </script>
 </body>
 </html>
