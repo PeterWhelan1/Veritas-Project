@@ -1,0 +1,28 @@
+# Veritas‑AI Values Survey
+A single‑page survey for MIS20070 Section 5 using two ternary plots and Formspree.
+
+
+## Quick start
+1. **Clone** / upload these files into a new GitHub repo and enable **GitHub Pages** (Deploy from `main`, folder `/root`).
+2. Open `index.html` in your browser to test locally, or share your GitHub Pages URL to collect data.
+3. The page posts each plot separately to Formspree at the endpoint set in `index.html` → `window.FORMSPREE_ENDPOINT`.
+4. Use the Python script in `analysis/` to aggregate and plot your results.
+
+
+## One‑submission per plot
+We enforce a client‑side lock with `localStorage`. This is suitable for coursework but not tamper‑proof. If you need stronger controls, add email tokens or server verification.
+
+
+## Renaming values
+If you change value labels, update them in:
+- `index.html` (legend + axis titles)
+- `script.js` (`AXES_TITLES`)
+- `analysis/aggregate.py` (column names)
+
+
+## Ethics & privacy (suggested text)
+We do not collect names or emails by default. Content is limited to the dot position and basic metadata. Participation is voluntary and you may withdraw by closing the tab before submitting.
+
+
+## Citation of AI assistance
+“Assistance received from Digital Society Assistant (GPT-5), OpenAI.”
