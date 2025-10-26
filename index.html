@@ -3,307 +3,263 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Veritas AI – Rebuilding Trust in Policing</title>
-  <meta name="description" content="Veritas AI turns body‑cam footage into real accountability through human‑reviewed AI flags, privacy‑first safeguards, and transparent reporting." />
+  <title>Values Ternary Survey – Veritas AI & Public Trust in Policing</title>
   <style>
-    :root {
-      --bg: #0b0f14;
-      --panel: #121923;
-      --text: #e6f0ff;
-      --muted: #9fb3c8;
-      --accent: #6bc3ff;
-      --accent-2: #7affb2;
-      --danger: #ff6b6b;
-      --ok: #00d98b;
-      --focus: #ffd166;
-      --shadow: 0 10px 25px rgba(0,0,0,0.35);
-      --radius: 20px;
-    }
-
-    html, body { margin:0; padding:0; background:var(--bg); color:var(--text); font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
-
-    a { color: var(--accent); }
-
-    .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
-
-    header {
-      position: relative; overflow: clip; border-radius: calc(var(--radius) * 1.2);
-      background: radial-gradient(1200px 600px at 10% -20%, rgba(107,195,255,0.18), transparent 60%),
-                  radial-gradient(1000px 800px at 120% 10%, rgba(122,255,178,0.14), transparent 60%),
-                  linear-gradient(180deg, #0c121a 0%, #0b0f14 100%);
-      box-shadow: var(--shadow);
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr; gap: 24px; align-items: center; padding: 48px; 
-    }
-    @media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding: 28px; } }
-
-    .hero h1 { font-size: clamp(28px, 4.5vw, 56px); line-height: 1.05; margin: 0 0 10px; letter-spacing: -0.02em; }
-    .kicker { color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-size: 13px; }
-    .lede { font-size: clamp(16px, 2.1vw, 20px); color: var(--muted); margin: 8px 0 18px; }
-
-    /* Triangles panel */
-    .tri-wrap { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; height: 380px; }
-    @media (max-width: 600px){ .tri-wrap { height: 520px; grid-template-columns: 1fr; } }
-
-    .triangle {
-      position: relative; border-radius: var(--radius); overflow: clip; isolation: isolate; display: grid; place-items: center;
-      background: linear-gradient(180deg, #0e171f, #0a0f14);
-      outline: 2px solid rgba(255,255,255,0.05);
-    }
-    .triangle::before {
-      content: ""; position: absolute; inset: 0; z-index: 0; opacity: 0.95;
-      /* Make a triangle with clip-path for accessibility-friendly hit area */
-      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-      background: radial-gradient(60% 90% at 50% 30%, rgba(107,195,255,0.25), transparent 70%),
-                  radial-gradient(60% 60% at 50% 90%, rgba(122,255,178,0.25), transparent 80%),
-                  linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    }
-    .triangle.right::before { clip-path: polygon(50% 100%, 0% 0%, 100% 0%); }
-
-    .tri-content { position: relative; z-index: 1; display: grid; gap: 10px; padding: 16px; text-align: center; }
-    .tri-title { font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); }
-    .tri-desc { color: var(--muted); font-size: 14px; margin: 0 auto; max-width: 32ch; }
-
-    .choices { display: grid; gap: 8px; margin-top: 8px; }
-    .choice-btn {
-      appearance: none; border: 2px solid rgba(255,255,255,0.18); background: #0d141b; color: var(--text);
-      padding: 12px 14px; border-radius: 999px; cursor: pointer; font-weight: 650; letter-spacing: 0.01em;
-      box-shadow: 0 2px 0 rgba(255,255,255,0.06) inset, var(--shadow);
-    }
-    .choice-btn:hover { border-color: var(--accent); }
-    .choice-btn[aria-pressed="true"] { border-color: var(--ok); outline: 3px solid rgba(0,217,139,0.25); }
-
-    .hero-aside { display: grid; gap: 10px; }
-    .pill { display: inline-flex; align-items: center; gap: 8px; background: #0f1520; padding: 8px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.08); width: max-content; }
-    .pill svg { width: 18px; height: 18px; }
-
-    section { margin: 48px 0; }
-    .card { background: var(--panel); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,0.06); }
-    .grid { display: grid; gap: 18px; }
-    .grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-    .grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
-    @media (max-width: 900px){ .grid.cols-3, .grid.cols-2 { grid-template-columns: 1fr; } }
-
-    h2 { font-size: clamp(22px, 2.8vw, 32px); margin: 0 0 10px; }
-    h3 { font-size: 18px; margin: 0 0 6px; }
-    p { margin: 0 0 10px; }
-
-    .list { padding-left: 18px; }
-
-    /* Form */
-    form { display: grid; gap: 14px; }
-    label { font-weight: 600; }
-    input, textarea, select { width: 100%; box-sizing: border-box; background: #0e141b; color: var(--text); border: 1.5px solid rgba(255,255,255,0.16); border-radius: 10px; padding: 10px 12px; }
-    textarea { min-height: 120px; }
-    .form-row { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
-    @media (max-width: 700px){ .form-row { grid-template-columns: 1fr; } }
-    .help { color: var(--muted); font-size: 14px; }
-
-    .submit {
-      display: inline-flex; align-items: center; gap: 10px; justify-content: center;
-      padding: 12px 16px; border-radius: 999px; border: 0; cursor: pointer; font-weight: 700; letter-spacing: 0.01em;
-      background: linear-gradient(180deg, var(--accent), #2f87d3);
-      color: #081019; box-shadow: var(--shadow);
-    }
-    .submit:disabled { filter: grayscale(100%); opacity: 0.65; cursor: not-allowed; }
-
-    .notice { background: #0d141b; border: 1px dashed rgba(255,255,255,0.2); border-radius: 12px; padding: 10px 12px; color: var(--muted); }
-
-    footer { color: var(--muted); font-size: 14px; margin: 48px 0 24px; text-align: center; }
-
-    /* Focus styles for a11y */
-    :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
-    /* Triangle voting styles */
-    .vote-triangles { }
-    .triangle-container { display: flex; justify-content: center; align-items: flex-end; flex-wrap: wrap; gap: 40px; margin: 24px 0 16px; }
-    .triangle-btn { position: relative; width: 0; height: 0; border-left: 90px solid transparent; border-right: 90px solid transparent; border-bottom: 160px solid var(--accent); background: none; cursor: pointer; outline: none; transition: transform 0.25s ease, filter 0.25s ease; }
-    .triangle-btn span { position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-weight: 800; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 14px; line-height: 1.1; pointer-events: none; letter-spacing: 0.01em; }
-    .triangle-btn.safeguards { border-bottom-color: var(--ok); }
-    .triangle-btn.reject { border-bottom-color: var(--danger); }
-    .triangle-btn:hover, .triangle-btn[aria-pressed="true"] { transform: scale(1.05); filter: brightness(1.15); }
-    .triangle-btn[aria-pressed="true"]::after { content: ""; position: absolute; inset: -8px; border-left: 98px solid transparent; border-right: 98px solid transparent; border-bottom: 175px solid rgba(255,255,255,0.18); filter: blur(6px); z-index: -1; }
-
-</style>
+    :root{--bg:#0b1020;--panel:#111633;--ink:#f4f7ff;--muted:#9fb3ff;--accent:#6ea8fe;--good:#80ed99}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+    .wrap{max-width:1000px;margin:0 auto;padding:24px}
+    h1{font-size:clamp(1.2rem,2.5vw,1.8rem);margin:0 0 8px}
+    p.lede{color:var(--muted);margin-top:0}
+    .card{background:var(--panel);border-radius:18px;padding:18px 18px 22px;box-shadow:0 8px 24px rgba(0,0,0,.25);margin:16px 0}
+    .grid{display:grid;gap:18px;grid-template-columns:1fr;}
+    @media (min-width:980px){.grid{grid-template-columns:1fr 1fr}}
+    .tri{position:relative;user-select:none}
+    svg{width:100%;height:auto;display:block}
+    .tri .label{position:absolute;font-size:14px;color:var(--ink);text-align:center;max-width:34ch}
+    .tri .label strong{display:block}
+    .axis{stroke:#556;stroke-width:1}
+    .vertex{fill:#cbd5ff}
+    .dot{fill:var(--good);stroke:#0a0;stroke-width:1.5;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+    .hint{color:var(--muted);font-size:14px;margin:6px 0 0}
+    .nums{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
+    .nums output{background:#0d1230;border:1px solid #2a3469;border-radius:10px;padding:6px 10px;min-width:120px}
+    .btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    button{cursor:pointer;border:0;border-radius:12px;padding:10px 14px;background:var(--accent);color:#08102b;font-weight:700}
+    button.secondary{background:#253061;color:#d6deff}
+    button[disabled]{opacity:.5;cursor:not-allowed}
+    .foot{font-size:13px;color:#9bb0ff;margin-top:20px}
+    .req{color:#ffd166}
+    input[type="text"], textarea{width:100%;background:#0d1230;color:#e9edff;border:1px solid #2a3469;border-radius:10px;padding:10px}
+    a{color:#a9c5ff}
+  </style>
 </head>
 <body>
-  <div class="container">
-    <header role="banner" aria-label="Veritas AI overview">
-      <div class="hero">
+  <div class="wrap">
+    <h1>Tell us how society should balance policing values</h1>
+    <p class="lede">Place a single dot on <em>each</em> triangle to show the balance between three values that often trade off in policing. Then submit. We’ll aggregate anonymous results to study how views today compare with expectations for <strong>2075</strong>.</p>
+
+    <div class="card">
+      <p><strong>The three values</strong> (visible at the triangle corners):</p>
+      <ul>
+        <li><strong>Transparency & Accountability</strong> — public oversight, auditability, swift review of incidents.</li>
+        <li><strong>Privacy & Civil Liberties</strong> — protections for bystanders, suspects, and officers (e.g., automatic face blurring).</li>
+        <li><strong>Operational Effectiveness & Safety</strong> — timely information for safer, efficient policing and fewer false complaints.</li>
+      </ul>
+      <p class="hint">Idea context: <em>Veritas AI</em> uses bodycam footage to flag potential misconduct in near‑real time while preserving privacy with automatic blurring and human review.</p>
+    </div>
+
+    <form id="form" class="card" action="https://formspree.io/f/xqagazql
+      <h2 style="margin-top:0">Your responses</h2>
+      <div class="grid">
         <div>
-          <div class="kicker">Accountability • Privacy‑First • Human in the loop</div>
-          <h1>Veritas AI is here to rebuild trust through real accountability</h1>
-          <p class="lede">Body cameras generated yesterday's evidence problem: petabytes of footage no one can review. Veritas AI turns that into today's solution — near‑real‑time, human‑verified flags of potential misconduct with civilian faces automatically blurred.</p>
-          <div class="pill" aria-label="Key benefits">
-            <!-- check icon -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z"/></svg>
-            Faster reviews • Fewer false complaints • Better training
+          <h3 style="margin:.2rem 0 .5rem">Today (2025)</h3>
+          <div id="tri-today" class="tri"></div>
+          <p class="hint">Click anywhere inside the triangle. You can click again to adjust.</p>
+          <div class="nums">
+            <output id="out-today-a"><strong>Transparency & Accountability:</strong> <span>—</span>%</output>
+            <output id="out-today-b"><strong>Privacy & Civil Liberties:</strong> <span>—</span>%</output>
+            <output id="out-today-c"><strong>Operational Effectiveness & Safety:</strong> <span>—</span>%</output>
           </div>
         </div>
-
-        <!-- Dual triangles with THREE explicit choices -->
-        <aside class="hero-aside"><p class="notice">Cast your vote below.</p></aside>
+        <div>
+          <h3 style="margin:.2rem 0 .5rem">Future (2075)</h3>
+          <div id="tri-future" class="tri"></div>
+          <p class="hint">Click anywhere inside the triangle. You can click again to adjust.</p>
+          <div class="nums">
+            <output id="out-future-a"><strong>Transparency & Accountability:</strong> <span>—</span>%</output>
+            <output id="out-future-b"><strong>Privacy & Civil Liberties:</strong> <span>—</span>%</output>
+            <output id="out-future-c"><strong>Operational Effectiveness & Safety:</strong> <span>—</span>%</output>
+          </div>
+        </div>
       </div>
-    </header>
 
-    <main id="main" tabindex="-1">
-      <section class="grid cols-2">
-        <div class="card">
-          <h2>The problem</h2>
-          <p>Public trust in policing is collapsing. Police misconduct is rampant and there is a lack of resources, staff and the technology needed to combat this major issue. Body cameras were the old world's solution, but nowadays petabytes of footage cause too many cases of misconduct to go unseen, allowing wrongdoings to slip through. The result? A crisis of trust and legitimacy.</p>
-        </div>
-        <div class="card">
-          <h2>The solution</h2>
-          <p>Veritas AI ingests large amounts of footage and, in near real time, flags potential misconduct such as excessive use of force, unlawful searches or discrimination and automatically compiles short, time‑stamped clips for review. Through advanced pattern recognition trained on verified incidents, it analyses conversation, movement and context to detect rule breaches as they happen.</p>
-        </div>
-      </section>
+      <!-- Hidden fields to send to Formspree -->
+      <input type="hidden" name="today_transparency_accountability" id="today-a" required>
+      <input type="hidden" name="today_privacy_civil_liberties" id="today-b" required>
+      <input type="hidden" name="today_effectiveness_safety" id="today-c" required>
 
-      <section class="grid cols-3">
-        <article class="card">
-          <h3>Privacy by design</h3>
-          <ul class="list">
-            <li>All civilian faces are automatically blurred on ingestion.</li>
-            <li>Nothing leaves the system until human‑verified.</li>
-            <li>Data minimisation and retention controls.</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3>Human oversight</h3>
-          <ul class="list">
-            <li>Every AI flag is reviewed by trained analysts before sharing.</li>
-            <li>Clear escalation paths and audit logs.</li>
-            <li>Calibration to local policies and law.</li>
-          </ul>
-        </article>
-        <article class="card">
-          <h3>Benefits for everyone</h3>
-          <ul class="list">
-            <li>Faster reviews and better training feedback for forces.</li>
-            <li>Fewer false complaints and clearer exonerations.</li>
-            <li>Transparent accountability for communities.</li>
-          </ul>
-        </article>
-      </section>
+      <input type="hidden" name="future_transparency_accountability" id="future-a" required>
+      <input type="hidden" name="future_privacy_civil_liberties" id="future-b" required>
+      <input type="hidden" name="future_effectiveness_safety" id="future-c" required>
 
-      <section class="card vote-triangles" aria-labelledby="vote-heading">
-        <h2 id="vote-heading">Cast Your Vote</h2>
-        <p class="help">Click one of the triangles below to vote for your preferred approach.</p>
+      <input type="hidden" name="timestamp_iso" id="ts">
+      <input type="hidden" name="source" value="MIS20070 Section 5 – Veritas AI">
 
-        <!-- ✅ Replace the action URL with your Formspree endpoint -->
-        <form id="triangle-form" action="https://formspree.io/f/xqagazql
-          <input type="hidden" name="choice" id="choice-input" value="" />
+      <div class="card" style="margin-top:18px">
+        <label for="comment"><strong>Optional comment</strong> (e.g., why you prioritised these values)</label>
+        <textarea id="comment" name="comment" rows="3" placeholder="Your thoughts…"></textarea>
+      </div>
 
-          <div class="triangle-container" role="group" aria-label="Voting options">
-            <button type="button" class="triangle-btn adopt" data-choice="Adopt Veritas AI" aria-pressed="false" aria-label="Vote to adopt Veritas AI">
-              <span>Adopt<br>Veritas AI</span>
-            </button>
+      <div class="btnrow">
+        <button type="button" class="secondary" id="reset">Reset</button>
+        <button id="submitBtn" type="submit" disabled>Submit both answers</button>
+      </div>
+      <p class="hint">Your browser will prevent duplicate submissions on this device. <span class="req">You must place a dot on both triangles to enable the submit button.</span></p>
+      <p class="foot">Data policy: We only collect the six percentages above plus the optional comment and a timestamp. No personal identifiers are requested. Built for UCD MIS20070 (Section 5).</p>
+    </form>
 
-            <button type="button" class="triangle-btn safeguards" data-choice="Adopt with strict safeguards" aria-pressed="false" aria-label="Vote to adopt with strict safeguards">
-              <span>Adopt<br>with safeguards</span>
-            </button>
-
-            <button type="button" class="triangle-btn reject" data-choice="Do not adopt" aria-pressed="false" aria-label="Vote to not adopt Veritas AI">
-              <span>Do<br>Not<br>Adopt</span>
-            </button>
-          </div>
-
-          <div class="form-row">
-            <div>
-              <label for="name">Name <span class="help">(optional)</span></label>
-              <input id="name" name="name" autocomplete="name" />
-            </div>
-            <div>
-              <label for="email">Email <span class="help">(optional, for a reply)</span></label>
-              <input id="email" name="email" type="email" autocomplete="email" inputmode="email" />
-            </div>
-          </div>
-
-          <div>
-            <label for="message">Comments <span class="help">(optional)</span></label>
-            <textarea id="message" name="message" placeholder="Share context, concerns or suggestions…"></textarea>
-          </div>
-
-          <div>
-            <label class="help" for="consent">
-              <input id="consent" name="consent" type="checkbox" required />
-              I consent to my submission being processed for this vote. We won't sell or share your data.
-            </label>
-          </div>
-
-          <button class="submit" id="submit-btn" type="submit" disabled aria-disabled="true">
-            Submit my vote
-          </button>
-
-          <p id="selected-output" class="notice" role="status" aria-live="polite">No option selected yet.</p>
-        </form>
-        <div id="form-result" class="notice" role="status" aria-live="polite" hidden>Thanks — your vote was submitted.</div>
-      </section>
-
-      <section class="card">
-        <h2>How we meet accessibility & transparency best practices</h2>
-        <ul class="list">
-          <li>Semantic HTML, keyboard‑navigable controls, high‑contrast colours, visible focus states.</li>
-          <li>Clear choices labelled in text directly on the triangles so users know what they are voting for.</li>
-          <li>Inclusive language and plain‑English explanations of safeguards and oversight.</li>
-          <li>Data minimisation in the form — name/email optional; consent required.</li>
-        </ul>
-      </section>
-    </main>
-
-    <footer>
-      © <span id="y"></span> Veritas AI • <a href="#main">Back to top</a>
-    </footer>
+    <p class="foot">After you collect 50+ responses, export from Formspree as CSV and use the provided Python script to produce the aggregated ternary plot.</p>
   </div>
 
   <script>
-    // Year
-    document.getElementById('y').textContent = new Date().getFullYear();
+  // ---------- Geometry helpers (barycentric coordinates) ----------
+  function barycentric(P, A, B, C){
+    // Returns {u,v,w} s.t. P = u*A + v*B + w*C and u+v+w=1
+    const v0 = {x: B.x - A.x, y: B.y - A.y};
+    const v1 = {x: C.x - A.x, y: C.y - A.y};
+    const v2 = {x: P.x - A.x, y: P.y - A.y};
+    const d00 = v0.x*v0.x + v0.y*v0.y;
+    const d01 = v0.x*v1.x + v0.y*v1.y;
+    const d11 = v1.x*v1.x + v1.y*v1.y;
+    const d20 = v2.x*v0.x + v2.y*v0.y;
+    const d21 = v2.x*v1.x + v2.y*v1.y;
+    const denom = d00 * d11 - d01 * d01;
+    let v = (d11 * d20 - d01 * d21) / denom;
+    let w = (d00 * d21 - d01 * d20) / denom;
+    let u = 1 - v - w;
+    return {u, v, w};
+  }
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+  function inside({u,v,w}){ return u>=0 && v>=0 && w>=0; }
+  function toPercent(x){ return Math.round(x*100); }
 
-    // Voting controls (triangle buttons)
-    const triBtns = document.querySelectorAll('.triangle-btn');
-    const output = document.getElementById('selected-output');
-    const hiddenChoice = document.getElementById('choice-input');
-    const submitBtn = document.getElementById('submit-btn');
-    const consent = document.getElementById('consent');
+  // ---------- Reusable Ternary component (SVG) ----------
+  function makeTernary(el, idPrefix){
+    const pad = 24; const W = el.clientWidth || 440; const H = Math.round(W*0.85);
+    const h = Math.sqrt(3)/2; // equilateral triangle height factor
 
-    function updateSubmitState(){
-      const ok = hiddenChoice.value && consent.checked;
-      submitBtn.disabled = !ok; submitBtn.setAttribute('aria-disabled', String(!ok));
+    const A = {x: W/2, y: pad};                                  // top (Transparency & Accountability)
+    const B = {x: pad, y: pad + h*(W-2*pad)};                    // bottom-left (Privacy & Civil Liberties)
+    const C = {x: W - pad, y: pad + h*(W-2*pad)};                // bottom-right (Operational Effectiveness & Safety)
+
+    el.innerHTML = '';
+    el.style.minHeight = H+"px";
+
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
+    // Triangle and gridlines (10% iso-lines)
+    const tri = document.createElementNS(svg.namespaceURI,'polygon');
+    tri.setAttribute('points',`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`);
+    tri.setAttribute('fill','#151a3c');
+    tri.setAttribute('stroke','#445');
+    tri.setAttribute('stroke-width','2');
+    svg.appendChild(tri);
+
+    // Simple axis ticks (every 20%) from each edge
+    for(let t=0.2;t<1;t+=0.2){
+      const p1 = {x: (1-t)*A.x + t*B.x, y: (1-t)*A.y + t*B.y};
+      const p2 = {x: (1-t)*A.x + t*C.x, y: (1-t)*A.y + t*C.y};
+      const line = document.createElementNS(svg.namespaceURI,'line');
+      line.setAttribute('x1',p1.x); line.setAttribute('y1',p1.y);
+      line.setAttribute('x2',p2.x); line.setAttribute('y2',p2.y);
+      line.setAttribute('class','axis');
+      svg.appendChild(line);
     }
 
-    triBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const selected = btn.getAttribute('data-choice');
-        hiddenChoice.value = selected;
-        output.textContent = `Selected: ${selected}`;
-        triBtns.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
-        updateSubmitState();
-      });
+    // Vertices
+    [A,B,C].forEach(v=>{
+      const c = document.createElementNS(svg.namespaceURI,'circle');
+      c.setAttribute('cx',v.x); c.setAttribute('cy',v.y); c.setAttribute('r',4);
+      c.setAttribute('class','vertex');
+      svg.appendChild(c);
     });
 
-    consent.addEventListener('change', updateSubmitState);
+    // Clickable overlay to capture clicks
+    const overlay = document.createElementNS(svg.namespaceURI,'polygon');
+    overlay.setAttribute('points',`${A.x},${A.y} ${B.x},${B.y} ${C.x},${C.y}`);
+    overlay.setAttribute('fill','transparent');
+    overlay.style.cursor = 'crosshair';
+    svg.appendChild(overlay);
 
-    // Optional: client-side success message for basic UX without redirect
-    const form = document.getElementById('triangle-form');
-    const result = document.getElementById('form-result');
+    // Dot
+    const dot = document.createElementNS(svg.namespaceURI,'circle');
+    dot.setAttribute('r',6);
+    dot.setAttribute('class','dot');
+    dot.style.display = 'none';
+    svg.appendChild(dot);
 
-    form.addEventListener('submit', async (e) => {
-      // If you use Formspree default behaviour, you can remove this handler entirely.
-      e.preventDefault();
-      const data = new FormData(form);
-      try {
-        const resp = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
-        if (resp.ok) {
-          result.hidden = false; form.reset(); hiddenChoice.value = ''; output.textContent = 'No option selected yet.';
-          document.querySelectorAll('.triangle-btn').forEach(b => b.setAttribute('aria-pressed','false')); updateSubmitState();
-        } else {
-          const err = await resp.json().catch(() => ({}));
-          alert(err?.error || 'There was an issue submitting. Please try again or email us.');
-        }
-      } catch(err){ alert('Network issue. Please try again.'); }
+    el.appendChild(svg);
+
+    // Labels at corners (kept outside SVG for crisp text)
+    const labels = [
+      {el: document.createElement('div'), pos:{left:A.x-110, top:A.y-26}, html:'<strong>Transparency & Accountability</strong><span class="hint">(public oversight)</span>'},
+      {el: document.createElement('div'), pos:{left:B.x-120, top:B.y+6}, html:'<strong>Privacy & Civil Liberties</strong><span class="hint">(face blurring, due process)</span>'},
+      {el: document.createElement('div'), pos:{left:C.x-120, top:C.y+6}, html:'<strong>Operational Effectiveness & Safety</strong><span class="hint">(fewer false complaints)</span>'},
+    ];
+    labels.forEach(l=>{ l.el.className='label'; l.el.style.left=l.pos.left+'px'; l.el.style.top=l.pos.top+'px'; l.el.innerHTML=l.html; el.appendChild(l.el); });
+
+    let state = null; // {u,v,w,x,y}
+
+    function setFromPoint(px,py){
+      const bc = barycentric({x:px,y:py}, A, B, C);
+      // If clicked outside, gently clamp back to the nearest point inside
+      let u = clamp01(bc.u), v = clamp01(bc.v), w = clamp01(bc.w);
+      const s = u+v+w; u/=s; v/=s; w/=s;
+      const x = u*A.x + v*B.x + w*C.x; const y = u*A.y + v*B.y + w*C.y;
+      state = {u,v,w,x,y};
+      dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.style.display = 'block';
+      // update outputs + hidden inputs
+      document.querySelector(`#out-${idPrefix}-a span`).textContent = toPercent(u);
+      document.querySelector(`#out-${idPrefix}-b span`).textContent = toPercent(v);
+      document.querySelector(`#out-${idPrefix}-c span`).textContent = toPercent(w);
+      document.getElementById(`${idPrefix}-a`).value = toPercent(u);
+      document.getElementById(`${idPrefix}-b`).value = toPercent(v);
+      document.getElementById(`${idPrefix}-c`).value = toPercent(w);
+      enableIfReady();
+    }
+
+    overlay.addEventListener('click', (ev)=>{
+      const rect = svg.getBoundingClientRect();
+      const px = ev.clientX - rect.left;
+      const py = ev.clientY - rect.top;
+      setFromPoint(px,py);
     });
+
+    return {
+      reset(){ state=null; dot.style.display='none'; ['a','b','c'].forEach(sfx=>{ const o=document.querySelector(`#out-${idPrefix}-${sfx} span`); if(o) o.textContent='—'; const h=document.getElementById(`${idPrefix}-${sfx}`); if(h) h.value=''; }); }
+    };
+  }
+
+  // ---------- App wiring ----------
+  const triToday = makeTernary(document.getElementById('tri-today'), 'today');
+  const triFuture = makeTernary(document.getElementById('tri-future'), 'future');
+
+  function enableIfReady(){
+    const ok = ['today-a','today-b','today-c','future-a','future-b','future-c'].every(id=>{
+      const v = document.getElementById(id).value; return v !== '' && !isNaN(Number(v));
+    });
+    document.getElementById('submitBtn').disabled = !ok || wasSubmitted();
+  }
+
+  function wasSubmitted(){ return localStorage.getItem('veritas-ternary-submitted') === '1'; }
+
+  function markSubmitted(){ localStorage.setItem('veritas-ternary-submitted','1'); }
+
+  document.getElementById('reset').addEventListener('click', ()=>{ triToday.reset(); triFuture.reset(); enableIfReady(); });
+
+  // Timestamp
+  document.getElementById('ts').value = new Date().toISOString();
+
+  // Prevent duplicate submissions on this device
+  if(wasSubmitted()){
+    document.getElementById('submitBtn').disabled = true;
+    const p = document.createElement('p');
+    p.className='hint';
+    p.innerHTML = 'This device has already submitted. Thank you!';
+    document.querySelector('form').appendChild(p);
+  }
+
+  document.getElementById('form').addEventListener('submit', function(ev){
+    // As an extra guard, block if not completed
+    if(document.getElementById('submitBtn').disabled){ ev.preventDefault(); return; }
+  });
+
+  // After successful Formspree redirect, you can land on a thank-you page. If you keep same page, mark submitted:
+  // You may change this to Formspree's success page + back button if preferred.
+  window.addEventListener('pageshow', ()=>{ enableIfReady(); });
+  // When the request completes, Formspree will redirect; to support AJAX-free flow, we optimistically mark submitted after click:
+  document.getElementById('submitBtn').addEventListener('click', ()=>{ markSubmitted(); });
   </script>
 </body>
 </html>
