@@ -163,22 +163,16 @@
    function layoutFor(title){
   return {
     ternary: {
+      // pull the triangle in a bit so ticks never clip
+      domain: { x: [0.06, 0.94], y: [0.10, 0.96] },
       sum: 100,
-      aaxis: {
-        title: { text: LABELS.a, font: { color: '#e6e7eb' } },
-        tickfont: { color: '#e6e7eb' }
-      },
-      baxis: {
-        title: { text: LABELS.b, font: { color: '#e6e7eb' } },
-        tickfont: { color: '#e6e7eb' }
-      },
-      caxis: {
-        title: { text: LABELS.c, font: { color: '#e6e7eb' } },
-        tickfont: { color: '#e6e7eb' }
-      },
+      // SHORT edge titles so they don't overflow
+      aaxis: { title: { text: 'A' }, tickfont: { color: '#e6e7eb' } },
+      baxis: { title: { text: 'B' }, tickfont: { color: '#e6e7eb' } },
+      caxis: { title: { text: 'C' }, tickfont: { color: '#e6e7eb' } },
       bgcolor: 'rgba(0,0,0,0)'
     },
-    margin: { l: 10, r: 10, b: 10, t: 10 },
+    margin: { l: 48, r: 48, b: 48, t: 32 },
     paper_bgcolor: 'rgba(0,0,0,0)',
     plot_bgcolor: 'rgba(0,0,0,0)',
     font: { color: '#e6e7eb' },
@@ -187,9 +181,10 @@
   };
 }
 
-    function tracesFor(triple, grid){
+
+   function tracesFor(triple, grid){
   return [
-    // 1) invisible picker grid (so clicks anywhere register)
+    // 1) invisible picker grid (for click-to-place)
     {
       type: 'scatterternary',
       mode: 'markers',
@@ -206,11 +201,11 @@
       marker: { size: 12 },
       name: 'selection'
     },
-    // 3) vertex labels INSIDE the triangle (so they never clip off-screen)
+    // 3) BIG vertex labels (full text, inside the frame)
     {
       type: 'scatterternary',
       mode: 'text',
-      // small inward offset so text sits clearly inside the frame
+      // slight inward offset so text sits clearly inside
       a: [96, 2, 2],
       b: [2, 96, 2],
       c: [2, 2, 96],
@@ -222,6 +217,7 @@
     }
   ];
 }
+
 
 
       function updateHidden(which){
