@@ -188,8 +188,8 @@
       const el = document.getElementById(id);
       const grid = generateGrid(5);
       const t = state[which];
-      Plotly.react(el, tracesFor(t,grid), layoutFor(''), {displayModeBar:false});
-      el.on('plotly_click', (ev)=>{
+     Plotly.newPlot(el, tracesFor(t,grid), layoutFor(''), {displayModeBar:false});
+        el.on('plotly_click', (ev)=>{
         if(!ev.points||!ev.points.length) return;
         const p = ev.points[0]; if (p.curveNumber!==0) return; // only picker
         const a = Math.round(p.a); const b = Math.round(p.b); const c = 100-a-b;
