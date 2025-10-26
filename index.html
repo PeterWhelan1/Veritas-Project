@@ -189,14 +189,14 @@ async function submitBoth(){
     id,
     a_now: state.now.a, b_now: state.now.b, c_now: state.now.c,
     a_future: state.fut.a, b_future: state.fut.b, c_future: state.fut.c,
-    user_agent: navigator.userAgent
+    // Trim PII by default; keep user_agent only if you really need it
+    // user_agent: navigator.userAgent
   };
 
   setStatus('Submitting…');
 
   try{
     if (USE_SUPABASE){
-      // lightweight insert via fetch (no external library needed)
       const res = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
         method: 'POST',
         headers: {
@@ -210,7 +210,22 @@ async function submitBoth(){
         const text = await res.text();
         throw new Error(`Supabase error: ${res.status} ${text}`);
       }
+    } else if (typeof USE_FORMSPREE !== 'undefined' && USE_FORMSPREE) {
+      // Send to Formspree (returns 200 + JSON on success)
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(row)
+      });
+      if(!res.ok){
+        const text = await res.text();
+        throw new Error(`Formspree error: ${res.status} ${text}`);
+      }
     } else {
+      // Offline/local-only mode
       state.cache.push(row);
     }
 
@@ -218,7 +233,10 @@ async function submitBoth(){
     lockSubmission();
   } catch(err){
     console.error(err);
-    setStatus('Error recording response. Try download CSV, or contact the researcher.');
+    setStatus('Error recording response. You can still use “Download CSV (offline mode)”.');
+  }
+}
+
   }
 }
 
