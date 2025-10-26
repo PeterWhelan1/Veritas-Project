@@ -188,13 +188,42 @@
 }
 
     function tracesFor(triple, grid){
-      return [
-        { type:'scatterternary', mode:'markers', a:grid.A, b:grid.B, c:grid.C, marker:{size:8,opacity:0}, hoverinfo:'skip', name:'picker' },
-        { type:'scatterternary', mode:'markers', a:[triple.a], b:[triple.b], c:[triple.c], marker:{size:12}, name:'selection' }
-      ];
+  return [
+    // 1) invisible picker grid (so clicks anywhere register)
+    {
+      type: 'scatterternary',
+      mode: 'markers',
+      a: grid.A, b: grid.B, c: grid.C,
+      marker: { size: 8, opacity: 0 },
+      hoverinfo: 'skip',
+      name: 'picker'
+    },
+    // 2) user-selected dot
+    {
+      type: 'scatterternary',
+      mode: 'markers',
+      a: [triple.a], b: [triple.b], c: [triple.c],
+      marker: { size: 12 },
+      name: 'selection'
+    },
+    // 3) vertex labels INSIDE the triangle (so they never clip off-screen)
+    {
+      type: 'scatterternary',
+      mode: 'text',
+      // small inward offset so text sits clearly inside the frame
+      a: [96, 2, 2],
+      b: [2, 96, 2],
+      c: [2, 2, 96],
+      text: [LABELS.a, LABELS.b, LABELS.c],
+      textposition: 'middle center',
+      textfont: { size: 16, color: '#e6e7eb' },
+      hoverinfo: 'skip',
+      showlegend: false
     }
+  ];
+}
 
-    function updateHidden(which){
+      function updateHidden(which){
       const t = state[which];
       const pref = which==='now'?'present':'future';
       document.getElementById(`${pref}_a`).value = t.a;
