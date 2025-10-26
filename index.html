@@ -1,282 +1,295 @@
-
-     <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Veritas AI – Values Survey (Present vs 2075)</title>
-  <meta name="description" content="Ternary-plot survey for MIS20070 Section 5: compare current values and 2075 values for policing and public trust." />
-  <!-- Plotly CDN -->
-  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
+  <title>Veritas AI — Values Survey (Present vs 2075)</title>
+  <meta name="description" content="MIS20070 Section 5 ternary plot survey with Formspree collection." />
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
-    :root{--bg:#0f172a;--card:#111827;--text:#e5e7eb;--muted:#9ca3af;--accent:#60a5fa}
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:var(--bg);color:var(--text);margin:0}
-    .wrap{max-width:1100px;margin:0 auto;padding:24px}
-    .card{background:var(--card);border-radius:18px;padding:18px 20px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
-    h1,h2{margin:8px 0 6px}
-    .grid{display:grid;gap:16px}
+    :root{--bg:#0b1020;--card:#0f172a;--text:#e6edf6;--muted:#9fb2c7;--accent:#7cc0ff;--ok:#34d399;--warn:#fbbf24;--err:#f87171}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    .wrap{max-width:1100px;margin:0 auto;padding:22px}
+    h1{margin:0 0 6px;font-size:clamp(1.4rem,2vw,2rem)}
+    h2{margin:8px 0 10px;font-size:1.05rem;color:var(--accent)}
+    p{line-height:1.55}
+    .grid{display:grid;gap:14px}
     @media(min-width:960px){.grid-2{grid-template-columns:1fr 1fr}}
+    .card{background:var(--card);border-radius:18px;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,.28)}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#0c1a2c;border:1px solid #1d2b3e;color:var(--muted);font-size:.85rem}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
     .small{font-size:.9rem;color:var(--muted)}
-    .row{display:flex;gap:10px;align-items:center;margin:8px 0}
+    .plot{width:100%;height:440px}
     input[type=range]{width:100%}
-    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#0b1220;color:var(--text);font-size:.85rem;border:1px solid #1f2937}
-    .btn{appearance:none;background:var(--accent);color:#0b1220;border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
-    .btn:disabled{opacity:.5;cursor:not-allowed}
-    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
-    .notice{border-left:4px solid var(--accent);padding:10px 12px;background:#0b1220;border-radius:8px}
+    input[type=text],input[type=email]{width:100%;padding:10px;border-radius:10px;border:1px solid #2a3a4f;background:#0c1624;color:var(--text)}
+    .btn{appearance:none;background:var(--accent);color:#09121e;border:0;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer}
+    .btn.secondary{background:#334155;color:#e6edf6}
+    .btn.ok{background:var(--ok)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .notice{border-left:4px solid var(--accent);padding:10px 12px;background:#0b1526;border-radius:10px}
+    .status{margin-top:8px}
+    .status.ok{color:var(--ok)}
+    .status.err{color:var(--err)}
+    .foot{margin-top:18px}
+    label a{color:var(--accent)}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card" style="margin-bottom:16px">
-      <h1>Veritas AI – Values Survey</h1>
-      <p>Help us understand how society balances three values in policing. Place one point for <strong>today</strong> and one for the year <strong>2075</strong>. Your responses are anonymous.</p>
+  <div class="wrap" role="main">
+    <header class="card" aria-labelledby="title">
+      <h1 id="title">Veritas AI — Rebuilding Trust Through Real Accountability</h1>
+      <p class="small">Public trust in policing is under strain. Veritas AI turns vast body‑camera archives into actionable oversight by flagging potential misconduct (e.g., excessive force, unlawful searches, discrimination) and assembling short, time‑stamped clips for human review. Civilian faces are auto‑blurred and every AI flag is verified by a human before anything is shared.</p>
       <div class="notice small">
-        <strong>Values used (customise if needed):</strong>
-        <ul>
-          <li><em>A</em> – Transparency & Accountability to the Public</li>
-          <li><em>B</em> – Privacy & Civil Liberties (civilians + officers)</li>
-          <li><em>C</em> – Operational Effectiveness & Officer Safety</li>
-        </ul>
-        These are intentionally in tension (no simple either/or). Adapt labels to fit your scenario wording.
+        <strong>What you’re doing on this page:</strong> express how society should balance three values — <em>Transparency & Accountability</em>, <em>Privacy & Civil Liberties</em>, and <em>Operational Effectiveness & Officer Safety</em> — <strong>today</strong> and in <strong>2075</strong>. Place one dot in each triangle or use the sliders; percentages always sum to 100%.
       </div>
-    </div>
+    </header>
 
-    <div class="grid grid-2">
-      <section class="card">
+    <section class="grid grid-2" aria-label="Ternary plots">
+      <article class="card">
         <h2>Present (2025)</h2>
-        <div id="plot-present" style="width:100%;height:420px"></div>
-        <div class="row"><span class="pill">A: <span id="a-now-val">34</span>%</span><input id="a-now" type="range" min="0" max="100" value="34" step="1" /></div>
-        <div class="row"><span class="pill">B: <span id="b-now-val">33</span>%</span><input id="b-now" type="range" min="0" max="100" value="33" step="1" /></div>
-        <div class="row"><span class="pill">C: <span id="c-now-val">33</span>%</span><input id="c-now" type="range" min="0" max="100" value="33" step="1" /></div>
-        <div class="small">Sum: <span id="sum-now" class="mono">100</span>% (auto-normalised)</div>
-      </section>
+        <div id="plot-now" class="plot" role="img" aria-label="Ternary plot for present values"></div>
+        <div class="row">
+          <span class="pill">A: <span id="now-a-val">34</span>%</span><input id="now-a" type="range" min="0" max="100" step="1" value="34" aria-label="Present A percentage"/>
+        </div>
+        <div class="row">
+          <span class="pill">B: <span id="now-b-val">33</span>%</span><input id="now-b" type="range" min="0" max="100" step="1" value="33" aria-label="Present B percentage"/>
+        </div>
+        <div class="row">
+          <span class="pill">C: <span id="now-c-val">33</span>%</span><input id="now-c" type="range" min="0" max="100" step="1" value="33" aria-label="Present C percentage"/>
+        </div>
+        <div class="small">Sum: <span id="now-sum">100</span>% (auto‑normalised)</div>
+        <div class="row" style="margin-top:6px"><button type="button" class="btn secondary" id="now-clear">Clear dot</button></div>
+      </article>
 
-      <section class="card">
+      <article class="card">
         <h2>Future (2075)</h2>
-        <div id="plot-future" style="width:100%;height:420px"></div>
-        <div class="row"><span class="pill">A: <span id="a-fut-val">34</span>%</span><input id="a-fut" type="range" min="0" max="100" value="34" step="1" /></div>
-        <div class="row"><span class="pill">B: <span id="b-fut-val">33</span>%</span><input id="b-fut" type="range" min="0" max="100" value="33" step="1" /></div>
-        <div class="row"><span class="pill">C: <span id="c-fut-val">33</span>%</span><input id="c-fut" type="range" min="0" max="100" value="33" step="1" /></div>
-        <div class="small">Sum: <span id="sum-fut" class="mono">100</span>% (auto-normalised)</div>
-      </section>
-    </div>
-
-    <section class="card" style="margin-top:16px">
-      <h2>Submit</h2>
-      <p class="small">One submission per visitor. After submitting, buttons will disable in this browser.</p>
-      <div class="row">
-        <button id="submit" class="btn">Submit both plots</button>
-        <button id="download" class="btn" style="background:#34d399">Download CSV (offline mode)</button>
-      </div>
-      <p id="status" class="small"></p>
-      <details class="small" style="margin-top:8px">
-        <summary>Storage settings (Supabase optional)</summary>
-        <p>By default, responses are stored locally and you can download a CSV. To store to a database, toggle <span class="mono">USE_SUPABASE</span> to <span class="mono">true</span> below and add your project credentials. Table schema example is included in comments.</p>
-      </details>
+        <div id="plot-fut" class="plot" role="img" aria-label="Ternary plot for future values"></div>
+        <div class="row">
+          <span class="pill">A: <span id="fut-a-val">34</span>%</span><input id="fut-a" type="range" min="0" max="100" step="1" value="34" aria-label="Future A percentage"/>
+        </div>
+        <div class="row">
+          <span class="pill">B: <span id="fut-b-val">33</span>%</span><input id="fut-b" type="range" min="0" max="100" step="1" value="33" aria-label="Future B percentage"/>
+        </div>
+        <div class="row">
+          <span class="pill">C: <span id="fut-c-val">33</span>%</span><input id="fut-c" type="range" min="0" max="100" step="1" value="33" aria-label="Future C percentage"/>
+        </div>
+        <div class="small">Sum: <span id="fut-sum">100</span>% (auto‑normalised)</div>
+        <div class="row" style="margin-top:6px"><button type="button" class="btn secondary" id="fut-clear">Clear dot</button></div>
+      </article>
     </section>
 
-    <section class="card small" style="margin-top:16px">
-      <p>Built for MIS20070 Digital Society (Section 5). Adapt wording, export code, and cite assistance appropriately.</p>
+    <section class="card" aria-label="Submission">
+      <h2>Submit your two responses</h2>
+      <form id="resp-form" action="https://formspree.io/f/xqagazql
+        <div class="row">
+          <label class="small" for="email">Optional email (for receipt / dedup)</label>
+        </div>
+        <div class="row" style="max-width:420px"><input id="email" type="email" name="email" placeholder="you@example.com" autocomplete="email" /></div>
+
+        <!-- Hidden payload fields sent to Formspree -->
+        <input type="hidden" name="present_a" id="present_a" />
+        <input type="hidden" name="present_b" id="present_b" />
+        <input type="hidden" name="present_c" id="present_c" />
+        <input type="hidden" name="future_a" id="future_a" />
+        <input type="hidden" name="future_b" id="future_b" />
+        <input type="hidden" name="future_c" id="future_c" />
+        <input type="hidden" name="dataset" value="veritas-ai" />
+
+        <div class="row" style="margin-top:8px">
+          <label><input type="checkbox" id="consent" required/> <span class="small">I consent to my anonymised responses being used for research & teaching. I understand that individual identities are not collected.</span></label>
+        </div>
+
+        <div class="row" style="margin-top:10px">
+          <button id="submitBtn" class="btn ok" type="submit">Send my two responses</button>
+          <button id="downloadBtn" class="btn secondary" type="button">Download CSV (local backup)</button>
+          <span id="status" class="small status" aria-live="polite"></span>
+        </div>
+      </form>
+      <p class="foot small">Duplicate submissions are blocked on this browser. Clear site data to submit again.</p>
+    </section>
+
+    <section class="card small" aria-label="Safeguards">
+      <h2>Safeguards & limits</h2>
+      <ul>
+        <li>All civilian faces are blurred by default; clips are reviewed by humans before any sharing.</li>
+        <li>Model is trained on verified incidents; flags are prompts for review, not verdicts.</li>
+        <li>System logs and rationale are auditable; appeals process supported.</li>
+      </ul>
+      <p class="foot">Please acknowledge AI assistance where relevant: “Assistance received from Digital Society Assistant (GPT-5), OpenAI.”</p>
     </section>
   </div>
 
-<script>
-// ======================= CONFIG =======================
-// Toggle this to true when you've created a Supabase project and table
-const USE_SUPABASE = false;
-// Fill in if USE_SUPABASE === true
-const SUPABASE_URL = "";        // e.g., https://your-project.supabase.co
-const SUPABASE_ANON_KEY = "";   // anon key from Supabase settings
-const SUPABASE_TABLE = "veritas_values";
+  <script>
+    // ======== CONFIG ========
+    const LABELS = {
+      a: 'Transparency & Accountability',
+      b: 'Privacy & Civil Liberties',
+      c: 'Operational Effectiveness & Officer Safety'
+    };
+    const FORMSPREE_ENDPOINT = document.getElementById('resp-form').action; // set your endpoint in the form action
+    const LOCK_KEY = 'veritas_lock_v1';
 
-/* Supabase table schema suggestion (SQL):
-create table if not exists veritas_values (
-  id uuid primary key,
-  created_at timestamptz default now(),
-  a_now numeric not null,
-  b_now numeric not null,
-  c_now numeric not null,
-  a_future numeric not null,
-  b_future numeric not null,
-  c_future numeric not null,
-  user_agent text,
-  ip_hash text
-);
--- Consider enabling Row Level Security and a policy to allow insert with anon key.
-*/
-// ======================================================
+    // ======== State ========
+    const state = { now: {a:34,b:33,c:33}, fut: {a:34,b:33,c:33}, cache: [] };
 
-const labels = {
-  a: "Transparency & Accountability",
-  b: "Privacy & Civil Liberties",
-  c: "Operational Effectiveness & Officer Safety"
-};
-
-const state = {
-  now: { a:34, b:33, c:33 },
-  fut: { a:34, b:33, c:33 },
-  cache: [] // local submissions (CSV fallback)
-};
-
-function normalise(triple){
-  const total = Math.max(1, triple.a + triple.b + triple.c);
-  const a = Math.round(100 * triple.a / total);
-  const b = Math.round(100 * triple.b / total);
-  let c = 100 - a - b; // ensure exact 100
-  // keep within [0,100]
-  c = Math.max(0, Math.min(100, c));
-  return {a, b, c};
-}
-
-function syncFromSliders(which){
-  const aEl = document.getElementById(`a-${which}`);
-  const bEl = document.getElementById(`b-${which}`);
-  const cEl = document.getElementById(`c-${which}`);
-  const triple = normalise({ a: +aEl.value, b: +bEl.value, c: +cEl.value });
-  state[which] = triple;
-  aEl.value = triple.a; bEl.value = triple.b; cEl.value = triple.c;
-  document.getElementById(`a-${which}-val`).textContent = triple.a;
-  document.getElementById(`b-${which}-val`).textContent = triple.b;
-  document.getElementById(`c-${which}-val`).textContent = triple.c;
-  document.getElementById(`sum-${which === 'now' ? 'now':'fut'}`).textContent = triple.a + triple.b + triple.c;
-  drawPlot(which);
-}
-
-function drawPlot(which){
-  const plotId = which === 'now' ? 'plot-present' : 'plot-future';
-  const triple = state[which];
-  const data = [{
-    type: 'scatterternary',
-    mode: 'markers',
-    a: [triple.a], b: [triple.b], c: [triple.c],
-    marker: { size: 12 },
-    hovertemplate: `<b>${which === 'now' ? 'Present' : '2075'}</b><br>`+
-                   `A (${labels.a}): %{a}%<br>`+
-                   `B (${labels.b}): %{b}%<br>`+
-                   `C (${labels.c}): %{c}%<extra></extra>`
-  }];
-  const layout = {
-    ternary: {
-      sum: 100,
-      aaxis: { title: labels.a },
-      baxis: { title: labels.b },
-      caxis: { title: labels.c }
-    },
-    margin: { l: 10, r: 10, b: 10, t: 10 },
-    paper_bgcolor: '#111827',
-    plot_bgcolor: '#111827',
-    font: { color: '#e5e7eb' }
-  };
-  Plotly.react(plotId, data, layout, {displayModeBar: false});
-}
-
-function init(){
-  ['now','fut'].forEach(which => {
-    ['a','b','c'].forEach(k => {
-      document.getElementById(`${k}-${which}`).addEventListener('input', () => syncFromSliders(which));
-    });
-    syncFromSliders(which);
-  });
-
-  document.getElementById('submit').addEventListener('click', submitBoth);
-  document.getElementById('download').addEventListener('click', downloadCSV);
-}
-
-async function submitBoth(){
-  const id = crypto.randomUUID();
-  const row = {
-    id,
-    a_now: state.now.a, b_now: state.now.b, c_now: state.now.c,
-    a_future: state.fut.a, b_future: state.fut.b, c_future: state.fut.c,
-    // Trim PII by default; keep user_agent only if you really need it
-    // user_agent: navigator.userAgent
-  };
-
-  setStatus('Submitting…');
-
-  try{
-    if (USE_SUPABASE){
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_TABLE}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-        },
-        body: JSON.stringify(row)
-      });
-      if(!res.ok){
-        const text = await res.text();
-        throw new Error(`Supabase error: ${res.status} ${text}`);
-      }
-    } else if (typeof USE_FORMSPREE !== 'undefined' && USE_FORMSPREE) {
-      // Send to Formspree (returns 200 + JSON on success)
-      const res = await fetch(FORMSPREE_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(row)
-      });
-      if(!res.ok){
-        const text = await res.text();
-        throw new Error(`Formspree error: ${res.status} ${text}`);
-      }
-    } else {
-      // Offline/local-only mode
-      state.cache.push(row);
+    // ======== Helpers ========
+    function normalise(a,b,c){
+      const s = Math.max(1, a+b+c);
+      const A = Math.round(100*a/s), B = Math.round(100*b/s);
+      const C = Math.max(0, Math.min(100, 100 - A - B));
+      return {a:A,b:B,c:C};
     }
 
-    setStatus('Thanks! Your response has been recorded.');
-    lockSubmission();
-  } catch(err){
-    console.error(err);
-    setStatus('Error recording response. You can still use “Download CSV (offline mode)”.');
-  }
-}
+    function setSliders(prefix, t){
+      ['a','b','c'].forEach(k=>{
+        const el = document.getElementById(`${prefix}-${k}`);
+        el.value = t[k];
+        document.getElementById(`${prefix==='now'?'now':'fut'}-${k}-val`).textContent = t[k];
+      });
+      document.getElementById(prefix==='now'?'now-sum':'fut-sum').textContent = t.a + t.b + t.c;
+    }
 
-  }
-}
+    function generateGrid(step=5){ // percent step
+      const A=[],B=[],C=[];
+      for(let a=0;a<=100;a+=step){
+        for(let b=0;b<=100-a;b+=step){
+          A.push(a); B.push(b); C.push(100-a-b);
+        }
+      }
+      return {A,B,C};
+    }
 
-function lockSubmission(){
-  const btn = document.getElementById('submit');
-  btn.disabled = true;
-  localStorage.setItem('veritas_submitted', '1');
-}
+    function layoutFor(title){
+      return {
+        ternary:{ sum:100, aaxis:{title:LABELS.a}, baxis:{title:LABELS.b}, caxis:{title:LABELS.c}, bgcolor:'rgba(0,0,0,0)' },
+        margin:{l:10,r:10,b:10,t:10}, paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)', showlegend:false,
+        title:{text:title}
+      };
+    }
 
-function restoreLock(){
-  if(localStorage.getItem('veritas_submitted') === '1'){
-    document.getElementById('submit').disabled = true;
-  }
-}
+    function tracesFor(triple, grid){
+      return [
+        { type:'scatterternary', mode:'markers', a:grid.A, b:grid.B, c:grid.C, marker:{size:8,opacity:0}, hoverinfo:'skip', name:'picker' },
+        { type:'scatterternary', mode:'markers', a:[triple.a], b:[triple.b], c:[triple.c], marker:{size:12}, name:'selection' }
+      ];
+    }
 
-function setStatus(msg){
-  document.getElementById('status').textContent = msg;
-}
+    function updateHidden(which){
+      const t = state[which];
+      const pref = which==='now'?'present':'future';
+      document.getElementById(`${pref}_a`).value = t.a;
+      document.getElementById(`${pref}_b`).value = t.b;
+      document.getElementById(`${pref}_c`).value = t.c;
+    }
 
-function downloadCSV(){
-  const rows = state.cache.length ? state.cache : [{
-    id: crypto.randomUUID(),
-    a_now: state.now.a, b_now: state.now.b, c_now: state.now.c,
-    a_future: state.fut.a, b_future: state.fut.b, c_future: state.fut.c,
-    user_agent: navigator.userAgent
-  }];
-  const headers = Object.keys(rows[0]);
-  const csv = [headers.join(',')].concat(rows.map(r => headers.map(h => r[h]).join(','))).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'veritas_values.csv'; a.click();
-  URL.revokeObjectURL(url);
-}
+    function draw(which){
+      const id = which==='now'?'plot-now':'plot-fut';
+      const el = document.getElementById(id);
+      const grid = generateGrid(5);
+      const t = state[which];
+      Plotly.react(el, tracesFor(t,grid), layoutFor(''), {displayModeBar:false});
+      el.on('plotly_click', (ev)=>{
+        if(!ev.points||!ev.points.length) return;
+        const p = ev.points[0]; if (p.curveNumber!==0) return; // only picker
+        const a = Math.round(p.a); const b = Math.round(p.b); const c = 100-a-b;
+        state[which] = {a,b,c}; setSliders(which, state[which]); updateHidden(which); draw(which);
+      });
+    }
 
-// Kick things off when Plotly has loaded
-window.addEventListener('load', () => { init(); restoreLock(); });
-</script>
+    function bindSliders(which){
+      ['a','b','c'].forEach(k=>{
+        document.getElementById(`${which}-${k}`).addEventListener('input', ()=>{
+          const A = +document.getElementById(`${which}-a`).value;
+          const B = +document.getElementById(`${which}-b`).value;
+          const C = +document.getElementById(`${which}-c`).value;
+          state[which] = normalise(A,B,C);
+          setSliders(which, state[which]); updateHidden(which); draw(which);
+        });
+      });
+    }
+
+    function loadFromLocal(){
+      try{
+        const n = JSON.parse(localStorage.getItem('veritas_present')||'null');
+        const f = JSON.parse(localStorage.getItem('veritas_future')||'null');
+        if(n){ state.now=n; }
+        if(f){ state.fut=f; }
+      }catch{}
+    }
+
+    function saveLocal(){
+      localStorage.setItem('veritas_present', JSON.stringify(state.now));
+      localStorage.setItem('veritas_future', JSON.stringify(state.fut));
+    }
+
+    function setStatus(msg, ok=false){
+      const s = document.getElementById('status');
+      s.textContent = msg; s.className = 'small status ' + (ok?'ok':'err');
+    }
+
+    function lock(){ localStorage.setItem(LOCK_KEY, Date.now().toString()); document.getElementById('submitBtn').disabled = true; }
+    function restoreLock(){ if(localStorage.getItem(LOCK_KEY)) document.getElementById('submitBtn').disabled = true; }
+
+    function toRow(){
+      return {
+        present_a: state.now.a, present_b: state.now.b, present_c: state.now.c,
+        future_a: state.fut.a,  future_b: state.fut.b,  future_c: state.fut.c,
+        dataset: 'veritas-ai',
+        email: document.getElementById('email').value || ''
+      };
+    }
+
+    async function submitForm(e){
+      e.preventDefault();
+      if(!document.getElementById('present_a').value || !document.getElementById('future_a').value){
+        setStatus('Please place a dot in each triangle before submitting.'); return;
+      }
+      if(!document.getElementById('consent').checked){ setStatus('Please tick the consent box.'); return; }
+      document.getElementById('submitBtn').disabled = true; setStatus('Submitting…', true);
+      saveLocal();
+      try{
+        const resp = await fetch(FORMSPREE_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(document.getElementById('resp-form'))
+        });
+        if(!resp.ok){ throw new Error('Formspree error: '+resp.status); }
+        setStatus('Thanks! Your responses were recorded.', true);
+        lock();
+      } catch(err){
+        console.error(err);
+        setStatus('Submission failed. You can still use “Download CSV (local backup)”.');
+        document.getElementById('submitBtn').disabled = false;
+      }
+    }
+
+    function downloadCSV(){
+      const row = toRow();
+      const headers = Object.keys(row);
+      const csv = [headers.join(',') + '\n' + headers.map(h=>row[h]).join(',')];
+      const blob = new Blob(csv, {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='veritas_values.csv'; a.click(); URL.revokeObjectURL(url);
+    }
+
+    function clearDot(which){ state[which]={a:34,b:33,c:33}; setSliders(which,state[which]); updateHidden(which); draw(which); }
+
+    // ======== Init ========
+    window.addEventListener('load', ()=>{
+      loadFromLocal();
+      setSliders('now', state.now); setSliders('fut', state.fut);
+      updateHidden('now'); updateHidden('fut');
+      bindSliders('now'); bindSliders('fut');
+      draw('now'); draw('fut');
+      document.getElementById('resp-form').addEventListener('submit', submitForm);
+      document.getElementById('downloadBtn').addEventListener('click', downloadCSV);
+      document.getElementById('now-clear').addEventListener('click', ()=>clearDot('now'));
+      document.getElementById('fut-clear').addEventListener('click', ()=>clearDot('fut'));
+      restoreLock();
+    });
+  </script>
 </body>
 </html>
-// === Formspree (email) ===
-const USE_FORMSPREE = true;  // turn on Formspree transport
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xqagazql // replace with your real endpoint
+
+   
