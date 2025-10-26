@@ -116,7 +116,17 @@
 
     /* Focus styles for a11y */
     :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 8px; }
-  </style>
+    /* Triangle voting styles */
+    .vote-triangles { }
+    .triangle-container { display: flex; justify-content: center; align-items: flex-end; flex-wrap: wrap; gap: 40px; margin: 24px 0 16px; }
+    .triangle-btn { position: relative; width: 0; height: 0; border-left: 90px solid transparent; border-right: 90px solid transparent; border-bottom: 160px solid var(--accent); background: none; cursor: pointer; outline: none; transition: transform 0.25s ease, filter 0.25s ease; }
+    .triangle-btn span { position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); color: #fff; font-weight: 800; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 14px; line-height: 1.1; pointer-events: none; letter-spacing: 0.01em; }
+    .triangle-btn.safeguards { border-bottom-color: var(--ok); }
+    .triangle-btn.reject { border-bottom-color: var(--danger); }
+    .triangle-btn:hover, .triangle-btn[aria-pressed="true"] { transform: scale(1.05); filter: brightness(1.15); }
+    .triangle-btn[aria-pressed="true"]::after { content: ""; position: absolute; inset: -8px; border-left: 98px solid transparent; border-right: 98px solid transparent; border-bottom: 175px solid rgba(255,255,255,0.18); filter: blur(6px); z-index: -1; }
+
+</style>
 </head>
 <body>
   <div class="container">
@@ -134,30 +144,7 @@
         </div>
 
         <!-- Dual triangles with THREE explicit choices -->
-        <aside class="hero-aside" aria-labelledby="vote-title">
-          <h2 id="vote-title" class="visually-hidden" style="position:absolute;left:-9999px;">Community decision</h2>
-          <div class="tri-wrap" role="group" aria-label="Choose an option">
-            <div class="triangle left" aria-hidden="true"></div>
-            <div class="triangle right" aria-hidden="true"></div>
-            <!-- Centered content layered above triangles -->
-            <div class="tri-content" style="grid-column: 1 / span 1; align-self:center;">
-              <div class="tri-title">Adoption Path</div>
-              <p class="tri-desc">Select your preference so we know what you are voting for.</p>
-              <div class="choices">
-                <button class="choice-btn" data-choice="Adopt Veritas AI" aria-pressed="false" aria-label="Vote to adopt Veritas AI">Adopt Veritas AI</button>
-                <button class="choice-btn" data-choice="Adopt with strict safeguards" aria-pressed="false" aria-label="Vote to adopt with strict safeguards">Adopt with strict safeguards</button>
-              </div>
-            </div>
-            <div class="tri-content" style="grid-column: 2 / span 1; align-self:center;">
-              <div class="tri-title">Alternate View</div>
-              <p class="tri-desc">Prefer a different direction? You can choose that here.</p>
-              <div class="choices">
-                <button class="choice-btn" data-choice="Do not adopt" aria-pressed="false" aria-label="Vote to not adopt Veritas AI">Do not adopt</button>
-              </div>
-            </div>
-          </div>
-          <p id="selected-output" class="notice" role="status" aria-live="polite">No option selected yet.</p>
-        </aside>
+        <aside class="hero-aside"><p class="notice">Cast your vote below.</p></aside>
       </div>
     </header>
 
@@ -200,13 +187,27 @@
         </article>
       </section>
 
-      <section class="card" aria-labelledby="have-your-say">
-        <h2 id="have-your-say">Have your say</h2>
-        <p class="help">Pick an option above, then submit your vote. Personal details are optional. We collect the minimum required information and never use tracking cookies.</p>
+      <section class="card vote-triangles" aria-labelledby="vote-heading">
+        <h2 id="vote-heading">Cast Your Vote</h2>
+        <p class="help">Click one of the triangles below to vote for your preferred approach.</p>
 
         <!-- ✅ Replace the action URL with your Formspree endpoint -->
-        <form id="vote-form" action="https://formspree.io/f/xqagazql
+        <form id="triangle-form" action="https://formspree.io/f/xqagazql
           <input type="hidden" name="choice" id="choice-input" value="" />
+
+          <div class="triangle-container" role="group" aria-label="Voting options">
+            <button type="button" class="triangle-btn adopt" data-choice="Adopt Veritas AI" aria-pressed="false" aria-label="Vote to adopt Veritas AI">
+              <span>Adopt<br>Veritas AI</span>
+            </button>
+
+            <button type="button" class="triangle-btn safeguards" data-choice="Adopt with strict safeguards" aria-pressed="false" aria-label="Vote to adopt with strict safeguards">
+              <span>Adopt<br>with safeguards</span>
+            </button>
+
+            <button type="button" class="triangle-btn reject" data-choice="Do not adopt" aria-pressed="false" aria-label="Vote to not adopt Veritas AI">
+              <span>Do<br>Not<br>Adopt</span>
+            </button>
+          </div>
 
           <div class="form-row">
             <div>
@@ -235,8 +236,7 @@
             Submit my vote
           </button>
 
-          <p class="help">You can also email us directly at <a href="mailto:hello@example.org">hello@example.org</a>.</p>
-          <p class="notice">Tip: In Formspree, set <strong>Redirect</strong> to a thank‑you page, or rely on the inline confirmation below.</p>
+          <p id="selected-output" class="notice" role="status" aria-live="polite">No option selected yet.</p>
         </form>
         <div id="form-result" class="notice" role="status" aria-live="polite" hidden>Thanks — your vote was submitted.</div>
       </section>
@@ -261,8 +261,8 @@
     // Year
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Voting controls
-    const choiceBtns = Array.from(document.querySelectorAll('.choice-btn'));
+    // Voting controls (triangle buttons)
+    const triBtns = document.querySelectorAll('.triangle-btn');
     const output = document.getElementById('selected-output');
     const hiddenChoice = document.getElementById('choice-input');
     const submitBtn = document.getElementById('submit-btn');
@@ -273,12 +273,12 @@
       submitBtn.disabled = !ok; submitBtn.setAttribute('aria-disabled', String(!ok));
     }
 
-    choiceBtns.forEach(btn => {
+    triBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const selected = btn.getAttribute('data-choice');
         hiddenChoice.value = selected;
         output.textContent = `Selected: ${selected}`;
-        choiceBtns.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+        triBtns.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
         updateSubmitState();
       });
     });
@@ -286,7 +286,7 @@
     consent.addEventListener('change', updateSubmitState);
 
     // Optional: client-side success message for basic UX without redirect
-    const form = document.getElementById('vote-form');
+    const form = document.getElementById('triangle-form');
     const result = document.getElementById('form-result');
 
     form.addEventListener('submit', async (e) => {
@@ -297,7 +297,7 @@
         const resp = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
         if (resp.ok) {
           result.hidden = false; form.reset(); hiddenChoice.value = ''; output.textContent = 'No option selected yet.';
-          choiceBtns.forEach(b => b.setAttribute('aria-pressed','false')); updateSubmitState();
+          document.querySelectorAll('.triangle-btn').forEach(b => b.setAttribute('aria-pressed','false')); updateSubmitState();
         } else {
           const err = await resp.json().catch(() => ({}));
           alert(err?.error || 'There was an issue submitting. Please try again or email us.');
